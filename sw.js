@@ -1,14 +1,14 @@
 const CACHE_NAME = 'projectfolk-v1';
 const ASSETS = [
-    '/folk/',
-    '/folk/index.html',
-    '/folk/data.js',
-    '/folk/scenario_bg.jpg',
-    '/folk/tiles/media__1772161251695.jpg',
-    '/folk/tiles/media__1772161251826.jpg',
-    '/folk/tiles/media__1772161251891.jpg',
-    '/folk/tiles/media__1772161251933.jpg',
-    '/folk/tiles/media__1772161251948.jpg',
+    '/',
+    '/index.html',
+    '/data.js',
+    '/scenario_bg.jpg',
+    '/tiles/media__1772161251695.jpg',
+    '/tiles/media__1772161251826.jpg',
+    '/tiles/media__1772161251891.jpg',
+    '/tiles/media__1772161251933.jpg',
+    '/tiles/media__1772161251948.jpg',
 ];
 
 // Instalação: faz cache dos assets principais
