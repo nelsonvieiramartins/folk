@@ -1,0 +1,1675 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Project Folk: O Despertar das Lendas</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet" />
+
+    <script src="data.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FFD700", "primary-dark": "#D4AF37",
+                        "background-light": "#FFF8E1",
+                        "background-dark": "#1a1625", "surface-dark": "#2d2438",
+                        "surface-darker": "#15121e",
+                        "accent-blue": "#4fc3f7",
+                        "accent-red": "#ff5252",
+                        "craft-brown": "#8d6e63",
+                    },
+                    fontFamily: {
+                        display: ["Spline Sans", "sans-serif"],
+                        handwritten: ["Permanent Marker", "cursive"],
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+        }
+
+        .font-sketch {
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #15121e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 4px;
+        }
+
+        .wiggle-hover:hover {
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+
+        .phase-bg-transition {
+            transition: filter 2s ease, background-image 2s ease, opacity 2s ease;
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-dark text-slate-100 overflow-hidden h-screen flex flex-col selection:bg-primary selection:text-black relative">
+
+    <!-- ==================== MAIN GAME CONTAINER ==================== -->
+    <div id="game-container" class="hidden flex-col h-full w-full">
+
+        <!-- HEADER / HUD -->
+        <header
+            class="flex items-center justify-between whitespace-nowrap border-b-4 border-dashed border-[#4a3b5c] bg-surface-darker px-6 py-3 shrink-0 z-50 relative shadow-2xl">
+            <div class="flex items-center gap-4">
+                <div onclick="openModal('modal-confirm-reset')"
+                    class="size-10 flex items-center justify-center rounded-full bg-primary text-background-dark shadow-[0_0_15px_rgba(255,215,0,0.4)] border-2 border-white cursor-pointer hover:bg-yellow-400 transition-colors">
+                    <span class="material-symbols-outlined font-bold">home</span>
+                </div>
+                <h2
+                    class="text-white text-xl font-sketch leading-tight tracking-wider text-primary drop-shadow-md hidden sm:block">
+                    Project Folk</h2>
+            </div>
+
+            <div class="absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
+                <div class="flex items-center gap-0 bg-surface-dark rounded-full p-1 border-2 border-[#4a3b5c] shadow-lg"
+                    id="phase-pills">
+                    <div id="pill-morning"
+                        class="px-6 py-1.5 rounded-full text-xs font-bold text-gray-500 transition-all duration-500">
+                        MANHÃ</div>
+                    <div id="pill-afternoon"
+                        class="px-4 py-1 rounded-full text-xs font-bold text-gray-500 transition-all duration-500">TARDE
+                    </div>
+                    <div id="pill-night"
+                        class="px-4 py-1 rounded-full text-xs font-bold text-gray-500 transition-all duration-500">NOITE
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4 sm:gap-6">
+                <!-- Relics HP -->
+                <div class="flex items-center gap-1 bg-[#2d2438] px-3 py-1.5 rounded-lg border border-[#4a3b5c]">
+                    <span id="relic-1"
+                        class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current transition-colors">favorite</span>
+                    <span id="relic-2"
+                        class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current transition-colors">favorite</span>
+                    <span id="relic-3"
+                        class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current transition-colors">favorite</span>
+                    <span class="text-xs text-gray-300 ml-1 font-bold hidden sm:inline">Relíquias</span>
+                </div>
+                <div class="flex items-center gap-4 border-l-2 border-dashed border-[#4a3b5c] pl-4">
+                    <button onclick="gameAPI.openBestiary()"
+                        class="flex items-center gap-1 bg-[#1a1625] px-3 py-1.5 rounded-lg border border-purple-900/50 hover:border-purple-500 hover:bg-purple-900/30 transition-colors group cursor-pointer shadow-[0_0_10px_rgba(147,51,234,0.2)]">
+                        <span
+                            class="material-symbols-outlined text-purple-400 group-hover:scale-110 transition-transform">menu_book</span>
+                        <span
+                            class="text-xs text-purple-200 font-bold uppercase tracking-wider font-sketch hidden sm:block mt-1">Bestiário</span>
+                    </button>
+
+                    <!-- Currencies -->
+                    <div class="flex flex-col items-end">
+                        <div class="flex items-center gap-1">
+                            <span class="material-symbols-outlined text-primary text-sm">toll</span>
+                            <span id="currency-coins" class="font-mono text-sm font-bold text-primary">100</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex flex-1 overflow-hidden relative">
+
+            <!-- LEFT PANEL: INVENTORY (Morning/Afternoon only) -->
+            <aside id="panel-inventory"
+                class="w-72 sm:w-80 bg-[#251e30] border-r-4 border-[#4a3b5c] flex flex-col z-20 shadow-2xl overflow-hidden transition-transform duration-500">
+                <div
+                    class="p-4 border-b-2 border-dashed border-[#4a3b5c] bg-[#1f1929] flex justify-between items-center">
+                    <div>
+                        <h3 class="text-primary text-lg font-sketch uppercase flex items-center gap-2">Mochila</h3>
+                        <p class="text-gray-400 text-[10px] mt-1 font-mono">Itens de Sobrevivência</p>
+                    </div>
+                    <span class="material-symbols-outlined text-gray-500">backpack</span>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-4 space-y-2" id="inventory-list">
+                    <!-- Inventory Items Generated via JS -->
+                </div>
+
+                <!-- Crafted Items Area -->
+                <div class="border-t-4 border-dashed border-[#4a3b5c] bg-[#1f1929] flex flex-col shrink-0 h-48">
+                    <div
+                        class="p-2 border-b-2 border-dashed border-[#4a3b5c] bg-surface-darker flex justify-between items-center">
+                        <h3 class="text-white font-sketch text-lg tracking-wide">Prontos para Uso</h3>
+                        <span class="material-symbols-outlined text-green-400">precision_manufacturing</span>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-2 grid grid-cols-2 gap-2" id="crafted-list">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </aside>
+
+            <!-- CENTER PANEL: GAME BOARD & MAP (FIXED SIZE) -->
+            <section
+                class="shrink-0 w-[730px] h-[880px] relative bg-black overflow-hidden flex flex-col justify-end border-l-4 border-r-4 border-[#4a3b5c] shadow-2xl"
+                id="board-container">
+                <!-- Dynamic Background covering the whole screen, morphs based on Phase -->
+                <div id="dynamic-bg"
+                    class="absolute inset-0 bg-cover bg-center phase-bg-transition pointer-events-none opacity-80"
+                    style="background-image: url('scenario_bg.jpg'); filter: hue-rotate(30deg) brightness(0.9);">
+                </div>
+
+                <!-- Grid Map Overlay (Flat) -->
+                <div class="absolute inset-0 opacity-20 pointer-events-none z-0"
+                    style="background-image: linear-gradient(rgba(255, 215, 0, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 215, 0, 0.3) 1px, transparent 1px); background-size: 80px 80px;">
+                </div>
+
+                <!-- Central Floor Tiles 2x3 -->
+                <div class="absolute inset-0 z-0 flex items-center justify-center pointer-events-none"
+                    style="padding-bottom: 20px;">
+                    <div class="grid grid-cols-2 grid-rows-3 gap-0.5 shadow-2xl bg-black/50 border-4 border-black/80"
+                        style="width: 55%; height: 75%;">
+                        <div class="relative w-full h-full">
+                            <img src="tiles/media__1772161251695.jpg" class="w-full h-full object-cover opacity-90">
+                            <span
+                                class="absolute bottom-2 right-2 text-white/40 font-sketch text-5xl drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-10 pointer-events-none">1</span>
+                        </div>
+                        <div class="relative w-full h-full">
+                            <img src="tiles/media__1772161251826.jpg" class="w-full h-full object-cover opacity-90">
+                            <span
+                                class="absolute bottom-2 right-2 text-white/40 font-sketch text-5xl drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-10 pointer-events-none">2</span>
+                        </div>
+                        <div class="relative w-full h-full">
+                            <img src="tiles/media__1772161251891.jpg" class="w-full h-full object-cover opacity-90">
+                            <span
+                                class="absolute bottom-2 right-2 text-white/40 font-sketch text-5xl drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-10 pointer-events-none">3</span>
+                        </div>
+                        <div class="relative w-full h-full">
+                            <img src="tiles/media__1772161251933.jpg"
+                                class="w-full h-full object-cover opacity-90 transform scale-y-[-1]">
+                            <span
+                                class="absolute bottom-2 right-2 text-white/40 font-sketch text-5xl drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-10 pointer-events-none">4</span>
+                        </div>
+                        <div class="relative w-full h-full">
+                            <img src="tiles/media__1772161251948.jpg" class="w-full h-full object-cover opacity-90">
+                            <span
+                                class="absolute bottom-2 right-2 text-white/40 font-sketch text-5xl drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-10 pointer-events-none">5</span>
+                        </div>
+                        <div class="relative w-full h-full fill-container-rotate">
+                            <img src="tiles/media__1772161251695.jpg"
+                                class="w-full h-full object-cover opacity-90 transform scale-x-[-1] scale-y-[-1]">
+                            <span
+                                class="absolute bottom-2 right-2 text-white/40 font-sketch text-5xl drop-shadow-[0_0_5px_rgba(0,0,0,1)] z-10 pointer-events-none">6</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- YELLOW PATH (Vector 1 from Figma) -->
+                <!-- SVG Path matching the exact spiral route of the monsters -->
+                <svg class="absolute inset-0 pointer-events-none z-20 w-full h-full drop-shadow-[0_0_10px_rgba(255,215,0,0.8)]"
+                    viewBox="0 0 100 100" preserveAspectRatio="none">
+                    <polyline points="15,10 15,95 85,95 85,15 35,15 35,80 65,80 65,50" fill="none" stroke="#FFD700"
+                        stroke-width="0.5" stroke-dasharray="2 1" />
+                    <circle cx="65" cy="50" r="1.5" fill="#EF4444" class="animate-pulse" />
+                </svg>
+
+                <!-- TRAP SLOTS -->
+                <div id="trap-slots-container" class="absolute inset-0 z-30 pointer-events-none"></div>
+
+                <!-- Stage Info (Top Left) -->
+                <div
+                    class="absolute top-6 left-6 z-10 bg-black/50 p-2 rounded-lg border-l-2 border-primary backdrop-blur-sm transform scale-90 origin-top-left">
+                    <h1 class="text-xl font-sketch text-white tracking-widest" id="stage-title">A NOITE 1</h1>
+                    <p class="text-gray-300 text-xs mt-0.5" id="stage-desc">Coleta do Quintal. Sobreviva nas
+                        trincheiras.
+                    </p>
+                </div>
+
+                <!-- Action Hub (Top Right) -->
+                <div class="absolute top-6 right-6 z-20 flex gap-4" id="action-hub">
+                    <button id="btn-morning-store" onclick="openModal('modal-store')"
+                        class="hidden flex-col items-center justify-center w-24 h-24 bg-surface-darker text-white rounded-xl border-b-4 border-[#15121e] active:translate-y-1 transition-all group hover:bg-[#382e45]">
+                        <span
+                            class="material-symbols-outlined text-4xl mb-1 text-blue-400 group-hover:scale-110 transition-transform">inventory_2</span>
+                        <span class="text-[10px] font-bold uppercase text-blue-200">Depósito</span>
+                    </button>
+
+                    <button id="btn-afternoon-trade" onclick="openModal('modal-trade')"
+                        class="hidden flex-col items-center justify-center w-24 h-24 bg-surface-darker text-white rounded-xl border-b-4 border-[#15121e] active:translate-y-1 transition-all group hover:bg-[#382e45]">
+                        <span
+                            class="material-symbols-outlined text-4xl mb-1 text-orange-400 group-hover:scale-110 transition-transform">storefront</span>
+                        <span class="text-[10px] font-bold uppercase text-orange-200">Seu Zé</span>
+                    </button>
+
+                    <button id="btn-next-phase" onclick="gameAPI.advancePhase()"
+                        class="relative flex flex-col items-center justify-center w-[90px] h-[90px] bg-primary text-background-dark rounded-xl border-b-[6px] border-primary-dark active:border-b-0 active:translate-y-2 transition-all shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:brightness-110 wiggle-hover">
+                        <span class="material-symbols-outlined text-4xl mb-1">arrow_forward</span>
+                        <span class="text-[10px] font-black uppercase tracking-wider font-sketch" id="btn-next-label">À
+                            TARDE</span>
+                    </button>
+                </div>
+
+            </section>
+
+            <!-- RIGHT PANEL: PERMANENT STORE CONTAINER -->
+            <aside id="store-panel"
+                class="w-[400px] shrink-0 bg-[#15121e] flex flex-col relative overflow-hidden z-10 border-l-4 border-dashed border-[#4a3b5c]">
+
+                <!-- Placeholder for Night -->
+                <div id="store-night"
+                    class="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-50 z-0 hidden">
+                    <span class="material-symbols-outlined text-6xl text-gray-700 mb-4">nights_stay</span>
+                    <p class="text-gray-500 font-sketch text-lg text-center">Fase da Noite<br><span
+                            class="text-xs font-sans">Loja fechada. Sobreviva!</span></p>
+                </div>
+
+                <!-- Morning Store (Depósito) -->
+                <div id="store-morning"
+                    class="absolute inset-0 flex flex-col z-10 bg-surface-darker transition-opacity duration-300">
+                    <div
+                        class="bg-blue-900/40 p-4 border-b-2 border-[#4a3b5c] flex justify-between items-center shrink-0">
+                        <h2 class="text-2xl font-sketch text-white">Depósito de Peças</h2>
+                        <span class="material-symbols-outlined text-blue-400">inventory_2</span>
+                    </div>
+                    <div class="p-6 flex-1 overflow-y-auto">
+                        <p class="text-gray-400 text-sm mb-4">Itens básicos para começar o dia (Custo: 1 Moeda ou
+                            Grátis).</p>
+                        <div class="grid grid-cols-2 gap-4" id="store-items-grid">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Afternoon Store (Seu Zé) -->
+                <div id="store-afternoon"
+                    class="absolute inset-0 flex flex-col z-10 bg-craft-brown hidden transition-opacity duration-300">
+                    <div
+                        class="bg-[#5d4037] p-4 border-b-4 border-[#3e2723] flex justify-between items-center shrink-0">
+                        <h2 class="text-2xl font-sketch text-white drop-shadow-lg">Venda do Seu Zé</h2>
+                        <p class="text-primary font-bold text-[10px] uppercase mt-1">Negocie Recursos.</p>
+                    </div>
+                    <div class="p-4 flex-1 overflow-y-auto flex flex-col gap-4">
+                        <!-- Buy block -->
+                        <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c]">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-xs">storefront</span> Comprar
+                            </h4>
+                            <div class="grid grid-cols-2 gap-3" id="trade-buy-grid">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+                        <!-- Sell block -->
+                        <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c] flex flex-col">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-xs">sell</span> Vender
+                            </h4>
+                            <div class="flex gap-3 justify-center" id="trade-bench">
+                                <div id="trade-slot-1" onclick="gameAPI.openSellSelector(1)"
+                                    class="w-16 h-16 bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors relative">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>
+                                </div>
+                                <div id="trade-slot-2" onclick="gameAPI.openSellSelector(2)"
+                                    class="w-16 h-16 bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors relative">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>
+                                </div>
+                            </div>
+                            <button id="btn-execute-trade" onclick="gameAPI.executeTrade()"
+                                class="w-full mt-4 bg-primary text-black font-sketch text-md py-2 rounded-xl active:translate-y-1 transition-transform">FECHAR
+                                NEGÓCIO</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- SLIDING CRAFT MANUAL -->
+            <aside id="craft-panel-container"
+                class="absolute top-0 right-0 h-full w-[400px] bg-[#1f1929] border-l-4 border-dashed border-[#4a3b5c] shadow-[-20px_0_50px_rgba(0,0,0,0.8)] z-40 transform translate-x-full transition-transform duration-500 flex flex-col">
+
+                <!-- Open/Close Tab -->
+                <button
+                    onclick="document.getElementById('craft-panel-container').classList.toggle('translate-x-full'); gameAPI.renderCraftBook();"
+                    class="absolute top-1/2 -left-12 -translate-y-1/2 bg-[#1f1929] border-y-4 border-l-4 border-[#4a3b5c] border-r-0 rounded-l-2xl p-2 pb-6 pt-6 flex flex-col items-center justify-center text-green-400 hover:text-green-300 transition-colors shadow-[-10px_0_15px_rgba(0,0,0,0.5)] cursor-pointer group">
+                    <span
+                        class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform font-bold">menu_book</span>
+                    <span class="text-[8px] font-bold uppercase tracking-widest"
+                        style="writing-mode: vertical-rl; transform: rotate(180deg);">MANUAL</span>
+                </button>
+
+                <!-- Panel Content -->
+                <div
+                    class="p-6 border-b-2 border-dashed border-[#4a3b5c] flex justify-between items-center bg-surface-darker shrink-0">
+                    <div>
+                        <h2 class="text-white font-sketch text-3xl drop-shadow-lg">Criação</h2>
+                        <p class="text-green-400 font-bold text-[10px] uppercase mt-1">Transforme sua sucata em
+                            proteção.</p>
+                    </div>
+                    <button onclick="document.getElementById('craft-panel-container').classList.add('translate-x-full')"
+                        class="bg-black/50 p-2 rounded-full text-white hover:bg-red-500 transition-colors"><span
+                            class="material-symbols-outlined">close</span></button>
+                </div>
+                <div class="p-4 overflow-y-auto w-full h-full flex flex-col gap-4">
+                    <p class="text-gray-400 text-sm">Sempre que a sua mochila possuir as peças necessárias, a Bancada se
+                        acende.</p>
+                    <div id="craft-book-grid" class="flex flex-col gap-4 w-full pb-44">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- ==================== START SCREEN ==================== -->
+    <div id="start-screen"
+        class="absolute inset-0 bg-[#0a0810] z-[100] flex flex-col items-center justify-center overflow-hidden">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30 pointer-events-none"
+            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSPCybzV9Fo0dPR75DM3-zA_obX1LsPzKfDv0TceZoher6-HeEltE5EJGUKH__5QVk6CdApQ22bsOOuQ6kRwbwtGpRrHueIb-KIdB67xa50ReHMpPKXdLfdZPUxS4Ndvjne9l0oKbuIrW_pMDcXSWC1UfR34X5tu5UN_6VHehp9a_-y34qpG8zLJZeWnOcYXU10_U3JSexlXNKBXMh06jgeqVUEmFjzgLQYlUO4NMiBy5_NI_zwy1Y1kxvdcot35lY0wku1ncJWgzr'); filter: grayscale(1) contrast(1.5);">
+        </div>
+
+        <div
+            class="relative z-10 flex flex-col items-center max-w-lg text-center p-8 bg-black/60 backdrop-blur-md rounded-2xl border-2 border-[#4a3b5c] shadow-[0_0_50px_rgba(255,215,0,0.1)]">
+            <span class="material-symbols-outlined text-6xl text-primary mb-4 animate-bounce">toys</span>
+            <h1 class="text-6xl font-sketch text-white mb-2 tracking-widest drop-shadow-md">Project Folk</h1>
+            <h2 class="text-primary-dark text-lg uppercase tracking-widest font-bold mb-8">O Despertar das Lendas</h2>
+
+            <p class="text-gray-300 text-sm mb-8 leading-relaxed">
+                As noites são longas e as lendas cobram seu preço. Construa defesas com sucata, compre recursos no Seu
+                Zé e evite que 20 ondas de monstros alcancem as velhas Relíquias do Casarão.
+            </p>
+
+            <button onclick="bootGame()"
+                class="w-full bg-primary hover:bg-yellow-400 text-black font-sketch text-2xl py-4 rounded-xl border-b-4 border-primary-dark active:border-b-0 active:translate-y-1 transition-all shadow-[0_0_20px_rgba(255,215,0,0.5)]">
+                ACENDER AS LUZES (COMEÇAR)
+            </button>
+        </div>
+    </div>
+
+    <!-- ==================== MODALS / POPUPS ==================== -->
+
+
+    <!-- Modal: Bestiary -->
+    <div id="modal-bestiary"
+        class="hidden fixed inset-0 z-[80] bg-black/95 backdrop-blur-md flex items-center justify-center p-4">
+        <div
+            class="bg-surface-darker border-4 border-purple-900 rounded-2xl w-full max-w-4xl h-[85vh] flex flex-col overflow-hidden shadow-[0_0_50px_rgba(147,51,234,0.3)]">
+            <div class="bg-[#1f1929] p-6 border-b-2 border-purple-900 flex justify-between items-center shrink-0">
+                <div>
+                    <h2 class="text-4xl font-sketch text-white tracking-widest text-purple-400 drop-shadow-md">Bestiário
+                        das Lendas</h2>
+                    <p class="text-purple-200 font-bold text-xs uppercase tracking-widest mt-1">Conheça seus inimigos.
+                    </p>
+                </div>
+                <button onclick="closeModal('modal-bestiary')"
+                    class="text-purple-400 hover:text-white bg-black/50 p-2 rounded-full transition-colors">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1 bg-[#15121e]">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="bestiary-grid">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Select Item to Sell -->
+    <div id="modal-select-sell"
+        class="hidden fixed inset-0 z-[70] bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div
+            class="bg-[#1f1929] border-4 border-[#4a3b5c] rounded-2xl w-full max-w-2xl overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+            <div
+                class="p-4 border-b-2 border-dashed border-[#4a3b5c] flex justify-between items-center bg-surface-darker">
+                <h2 class="text-white font-sketch text-2xl">O que você quer vender?</h2>
+                <button onclick="closeModal('modal-select-sell')" class="text-gray-400 hover:text-white"><span
+                        class="material-symbols-outlined">close</span></button>
+            </div>
+            <div class="p-4 max-h-[60vh] overflow-y-auto w-full">
+                <div class="grid grid-cols-2 gap-3" id="sell-selector-grid">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirm Delete Flow -->
+    <div id="modal-confirm-destroy"
+        class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div
+            class="bg-red-950/80 border-4 border-red-500 rounded-2xl w-full max-w-sm p-6 text-center shadow-[0_0_50px_rgba(239,68,68,0.5)]">
+            <span class="material-symbols-outlined text-6xl text-red-500 mb-4 animate-pulse">warning</span>
+            <h2 class="text-white font-sketch text-2xl mb-2">Descartar Recurso?</h2>
+            <p class="text-red-200 text-sm mb-6">Você não tem como recuperar itens descartados.<br>Deseja destruir isto
+                e liberar o espaço na mochila?</p>
+            <div class="flex gap-4">
+                <button onclick="closeModal('modal-confirm-destroy')"
+                    class="flex-1 bg-surface-dark text-white py-2 rounded font-bold hover:bg-[#382e45] transition-colors border border-gray-600">NÃO</button>
+                <button id="btn-confirm-destroy-yes"
+                    class="flex-1 bg-red-600 text-white py-2 rounded font-bold hover:bg-red-500 transition-colors shadow-[0_0_15px_rgba(220,38,38,0.5)]">SIM,
+                    JOGUE FORA</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirm Reset Flow -->
+    <div id="modal-confirm-reset"
+        class="hidden fixed inset-0 z-[100] bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div
+            class="bg-primary-dark/80 border-4 border-primary rounded-2xl w-full max-w-sm p-6 text-center shadow-[0_0_50px_rgba(255,215,0,0.5)]">
+            <span
+                class="material-symbols-outlined text-6xl text-primary mb-4 animate-[spin_3s_linear_infinite]">restart_alt</span>
+            <h2 class="text-white font-sketch text-3xl mb-2">Reiniciar Turno?</h2>
+            <p class="text-yellow-100 text-sm mb-6">Todo o seu progresso neste jardim será perdido.<br>Deseja voltar
+                para o menu principal de Fases?</p>
+            <div class="flex gap-4">
+                <button onclick="closeModal('modal-confirm-reset')"
+                    class="flex-1 bg-surface-dark text-white py-2 rounded font-bold hover:bg-[#382e45] transition-colors border border-gray-600">CANCELAR</button>
+                <button onclick="window.location.reload()"
+                    class="flex-1 bg-primary text-black py-2 rounded font-bold hover:bg-yellow-400 transition-colors">SIM,
+                    DESISTIR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Weapon/Trap Detail -->
+    <div id="modal-weapon-detail"
+        class="hidden fixed inset-0 z-[75] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+            class="bg-surface-darker border-4 border-[#4a3b5c] rounded-2xl w-full max-w-md overflow-hidden shadow-[0_0_50px_rgba(0,0,0,0.8)] flex flex-col">
+            <div
+                class="bg-[#1f1929] p-4 border-b-2 border-dashed border-[#4a3b5c] flex justify-between items-center shrink-0">
+                <h2 class="text-white font-sketch text-2xl" id="wdetail-name">Arma</h2>
+                <button onclick="closeModal('modal-weapon-detail')" class="text-gray-400 hover:text-white">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <div class="p-5 flex flex-col gap-4">
+                <div class="flex items-center gap-4">
+                    <div id="wdetail-icon-wrap"
+                        class="w-20 h-20 rounded-xl border-2 border-gray-600 flex items-center justify-center bg-black/40 shrink-0">
+                        <span class="material-symbols-outlined text-5xl text-gray-400" id="wdetail-icon">toys</span>
+                    </div>
+                    <div class="flex flex-col gap-2 flex-1">
+                        <div class="grid grid-cols-3 gap-2">
+                            <div
+                                class="bg-black/30 rounded-lg p-2 flex flex-col items-center border border-blue-900/50">
+                                <span class="material-symbols-outlined text-blue-400 text-lg">radar</span>
+                                <span class="text-[10px] text-gray-400 uppercase font-bold">Alcance</span>
+                                <span class="text-white font-sketch text-lg" id="wdetail-range">0</span>
+                            </div>
+                            <div
+                                class="bg-black/30 rounded-lg p-2 flex flex-col items-center border border-yellow-900/50">
+                                <span class="material-symbols-outlined text-yellow-400 text-lg">speed</span>
+                                <span class="text-[10px] text-gray-400 uppercase font-bold">Cadência</span>
+                                <span class="text-white font-sketch text-lg" id="wdetail-cadencia">0</span>
+                            </div>
+                            <div class="bg-black/30 rounded-lg p-2 flex flex-col items-center border border-red-900/50">
+                                <span class="material-symbols-outlined text-red-400 text-lg">swords</span>
+                                <span class="text-[10px] text-gray-400 uppercase font-bold">Poder</span>
+                                <span class="text-white font-sketch text-lg" id="wdetail-damage">0</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] uppercase font-bold text-gray-500">Tipo:</span>
+                            <span id="wdetail-type"
+                                class="text-[10px] font-bold bg-black/40 px-2 py-0.5 rounded-full border border-gray-600 text-gray-300"></span>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-2 flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">handyman</span> Construída com
+                    </h4>
+                    <div class="grid grid-cols-2 gap-2" id="wdetail-ingredients"></div>
+                </div>
+            </div>
+            <div class="p-4 bg-black/20 border-t border-dashed border-[#4a3b5c] flex gap-3">
+                <button id="wdetail-recycle-btn"
+                    class="flex-1 flex items-center justify-center gap-2 bg-green-900/50 text-green-300 border-2 border-green-800 hover:bg-green-700 hover:text-white font-sketch py-2 rounded-xl transition-all">
+                    <span class="material-symbols-outlined">recycling</span> Reciclar
+                </button>
+                <button onclick="closeModal('modal-weapon-detail')"
+                    class="flex-1 bg-[#2d2438] text-gray-300 border-2 border-[#4a3b5c] hover:bg-[#382e45] font-bold py-2 rounded-xl transition-all">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Confirm Recycle -->
+    <div id="modal-confirm-recycle"
+        class="hidden fixed inset-0 z-[80] bg-black/90 backdrop-blur flex items-center justify-center p-4">
+        <div
+            class="bg-green-950/80 border-4 border-green-600 rounded-2xl w-full max-w-sm p-6 text-center shadow-[0_0_50px_rgba(34,197,94,0.3)] flex flex-col gap-4">
+            <span class="material-symbols-outlined text-5xl text-green-400 mx-auto animate-pulse">recycling</span>
+            <h2 class="text-white font-sketch text-2xl">Reciclar Arma?</h2>
+            <p class="text-green-200 text-sm">Você vai desmontar esta arma e recuperar os seguintes materiais:</p>
+            <div class="grid grid-cols-2 gap-2 text-left" id="recycle-ingredients-list"></div>
+            <div class="flex gap-3 mt-2">
+                <button onclick="closeModal('modal-confirm-recycle')"
+                    class="flex-1 bg-surface-dark text-white py-2 rounded font-bold hover:bg-[#382e45] border border-gray-600">NÃO</button>
+                <button id="btn-confirm-recycle-yes"
+                    class="flex-1 bg-green-600 text-white py-2 rounded font-bold hover:bg-green-500 shadow-[0_0_15px_rgba(34,197,94,0.4)]">SIM,
+                    RECICLAR</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOASTS -->
+    <div id="toast-container" class="absolute top-20 right-4 z-[90] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- ==================== GAME LOGIC (game.js mapping) ==================== -->
+    <script>
+        // --- GLOBAL STATE ---
+        const GameState = {
+            night: 1,
+            phase: 'MORNING', // MORNING, AFTERNOON, NIGHT
+            relics: 3,
+            coins: 100, // Unified currency replacing Tamps
+            inventory: [], // Removed initial mock items
+            craftedItems: [], // Items ready to be placed
+            tradeSlots: { 1: null, 2: null },
+            hasSoldThisAfternoon: false,
+            currentSellSlotOpen: 1,
+            morningPurchases: 0, // Limite de 2 compras por manhã
+
+            // Placement Mode
+            placementModeActive: false,
+            placementItemIndex: null,
+
+            trapSlots: [
+                // Outer Left Column
+                ...Array.from({ length: 6 }, (_, i) => ({ id: i + 1, x: 11.1, y: 20 + i * 14, occupied: false })),
+                // Outer Right Column
+                ...Array.from({ length: 6 }, (_, i) => ({ id: 7 + i, x: 88.9, y: 20 + i * 14, occupied: false })),
+                // Outer Bottom Row
+                { id: 13, x: 30, y: 89.4, occupied: false }, { id: 14, x: 50, y: 89.4, occupied: false }, { id: 15, x: 70, y: 89.4, occupied: false },
+
+                // Room Slots (Inside)
+                // Top Left
+                { id: 16, x: 30, y: 22, occupied: false }, { id: 17, x: 42, y: 22, occupied: false },
+                // Top Right
+                { id: 18, x: 58, y: 22, occupied: false }, { id: 19, x: 70, y: 22, occupied: false },
+                // Mid Left
+                { id: 20, x: 30, y: 50, occupied: false }, { id: 21, x: 42, y: 50, occupied: false },
+                // Mid Right
+                { id: 22, x: 58, y: 50, occupied: false }, { id: 23, x: 70, y: 50, occupied: false },
+                // Bot Left
+                { id: 24, x: 30, y: 75, occupied: false }, { id: 25, x: 42, y: 75, occupied: false },
+                // Bot Right (Path crosses here, but keep offset)
+                { id: 26, x: 58, y: 75, occupied: false }, { id: 27, x: 70, y: 75, occupied: false },
+            ],
+
+            // Auto Battler State
+            activeEnemies: [], // { id, type, hp, maxHp, x, y, el }
+            towers: [], // Removed mock default tower
+            gameLoopId: null
+        };
+
+        // --- UTILS ---
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function showToast(title, message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            let bgColor = type === 'success' ? 'bg-green-600/90 border-green-400' : type === 'error' ? 'bg-red-600/90 border-red-400' : 'bg-surface-dark border-primary';
+            let icon = type === 'success' ? 'check_circle' : type === 'error' ? 'error' : 'info';
+
+            toast.className = `flex items-center gap-3 p-3 rounded-lg border shadow-lg text-white ${bgColor} transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto mt-2`;
+            toast.innerHTML = `<span class="material-symbols-outlined">${icon}</span><div class="flex flex-col"><span class="font-bold text-sm">${title}</span><span class="text-xs text-gray-200">${message}</span></div>`;
+
+            container.appendChild(toast);
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+            setTimeout(() => { toast.classList.add('translate-x-full', 'opacity-0'); setTimeout(() => toast.remove(), 300); }, 3000);
+        }
+
+        function bootGame() {
+            document.getElementById('start-screen').classList.add('hidden');
+            document.getElementById('game-container').classList.remove('hidden');
+            document.getElementById('game-container').classList.add('flex');
+            gameAPI.renderInventory();
+            gameAPI.updatePhaseUI();
+            gameAPI.renderTrapSlots();
+            showToast('Sessão Carregada', 'A fase da Manhã iniciou. Veja o depósito!', 'success');
+        }
+
+        // --- CORE API ---
+        const gameAPI = {
+            renderTrapSlots: () => {
+                const container = document.getElementById('trap-slots-container');
+                container.innerHTML = '';
+                GameState.trapSlots.forEach(slot => {
+                    const isPlaceable = GameState.placementModeActive && !slot.occupied;
+                    const pointerEvents = isPlaceable ? 'pointer-events-auto cursor-crosshair hover:scale-125 z-50 hover:bg-green-500/80 hover:border-green-400' : 'pointer-events-none';
+                    const activeAnim = isPlaceable ? 'animate-pulse bg-yellow-400/50 border-yellow-300' : (slot.occupied ? 'bg-white/5 border-white/10' : 'bg-white/10 border-white/30');
+                    // Número da bolha fica invisível quando ocupada
+                    const numVisible = slot.occupied ? 'invisible' : '';
+
+                    container.innerHTML += `
+                        <div id="slot-${slot.id}" 
+                             onclick="${isPlaceable ? `gameAPI.confirmPlacement(${slot.id})` : ''}"
+                             class="absolute flex items-center justify-center w-12 h-12 rounded-full border-2 transform -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ${pointerEvents} ${activeAnim}" 
+                             style="left: ${slot.x}%; top: ${slot.y}%">
+                             <span class="text-white/50 font-sketch text-2xl drop-shadow-md pointer-events-none select-none ${numVisible}">${slot.id}</span>
+                        </div>`;
+                });
+            },
+
+            getItemData: (id) => DB_ITEMS.find(i => i.id === id),
+
+            updateHUD: () => {
+                const coinsEl = document.getElementById('currency-coins');
+                if (coinsEl) coinsEl.innerText = GameState.coins;
+
+                // Relics
+                for (let i = 1; i <= 3; i++) {
+                    const el = document.getElementById(`relic-${i}`);
+                    if (GameState.relics >= i) {
+                        el.innerText = 'favorite'; el.classList.remove('text-gray-600'); el.classList.add('text-red-500');
+                    } else {
+                        el.innerText = 'favorite_border'; el.classList.remove('text-red-500'); el.classList.add('text-gray-600');
+                    }
+                }
+            },
+
+            renderInventory: () => {
+                const list = document.getElementById('inventory-list');
+                const craftedList = document.getElementById('crafted-list');
+                list.innerHTML = '';
+                craftedList.innerHTML = '';
+
+                GameState.inventory.forEach(invItem => {
+                    if (invItem.quantity <= 0) return;
+                    const item = gameAPI.getItemData(invItem.itemId);
+                    if (!item) return;
+
+                    const div = document.createElement('div');
+                    div.className = "inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]";
+                    div.draggable = true;
+                    div.ondragstart = (e) => {
+                        e.dataTransfer.setData("text", JSON.stringify({ invIndex: GameState.inventory.indexOf(invItem), item: item }));
+                        div.classList.add('opacity-50');
+                    };
+                    div.ondragend = () => div.classList.remove('opacity-50');
+
+                    div.innerHTML = `
+                        <div class="w-10 h-10 bg-${item.color.split('-')[0]}-500/20 rounded flex items-center justify-center border border-${item.color.split('-')[0]}-500/50 pointer-events-none shrink-0">
+                            <span class="material-symbols-outlined text-${item.color}">${item.icon}</span>
+                        </div>
+                        <div class="flex-1 flex justify-between items-center gap-2">
+                            <div class="flex flex-col flex-1 pointer-events-none">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-sm text-gray-200 truncate pr-1">${item.name}</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x${invItem.quantity}</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Valor Zé: ${item.sell_coins}</span>
+                            </div>
+                            <button onclick="gameAPI.triggerDestroyModal(${GameState.inventory.indexOf(invItem)})" class="w-6 h-6 rounded bg-red-900/40 border border-red-500/50 flex items-center justify-center text-red-400 hover:bg-red-500 hover:text-white transition-colors shrink-0" title="Descartar Item">
+                                <span class="material-symbols-outlined text-[14px]">delete</span>
+                            </button>
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+
+                GameState.craftedItems.forEach((cItem, index) => {
+                    const isSelecting = GameState.placementModeActive && GameState.placementItemIndex === index;
+                    const borderClass = isSelecting ? 'border-primary ring-2 ring-primary bg-primary/20' : 'border-green-500/30 hover:border-green-500 bg-surface-darker';
+
+                    craftedList.innerHTML += `
+                        <div class="${borderClass} p-2 rounded border flex flex-col items-center justify-center gap-1 group transition-colors relative cursor-pointer" onclick="gameAPI.openWeaponDetail(${index})">
+                            ${isSelecting ? '<span class="absolute -top-2 -right-2 material-symbols-outlined text-primary bg-black rounded-full text-sm">my_location</span>' : ''}
+                            
+                            <button onclick="event.stopPropagation(); gameAPI.openWeaponDetail(${index})" class="absolute top-1 left-1 w-5 h-5 bg-green-900/80 border border-green-500/50 rounded-full flex items-center justify-center text-green-400 hover:bg-green-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100 z-10" title="Detalhes / Reciclar">
+                                <span class="material-symbols-outlined text-[12px]">info</span>
+                            </button>
+
+                            <div onclick="event.stopPropagation(); gameAPI.togglePlacementMode(${index})" class="w-8 h-8 cursor-pointer bg-${cItem.color.split('-')[0]}-500/20 rounded-full flex items-center justify-center border border-${cItem.color.split('-')[0]}-500">
+                                <span class="material-symbols-outlined text-sm text-${cItem.color}">${cItem.icon}</span>
+                            </div>
+                            <span class="font-bold text-[10px] text-gray-300 text-center leading-tight cursor-default">${cItem.name}</span>
+                        </div>
+                    `;
+                });
+            },
+
+            advancePhase: () => {
+                const btn = document.getElementById('btn-next-phase');
+                btn.classList.add('scale-95'); setTimeout(() => btn.classList.remove('scale-95'), 150);
+
+                if (GameState.phase === 'MORNING') {
+                    GameState.phase = 'AFTERNOON';
+                    GameState.morningPurchases = 0; // Resetar contador de compras da manhã
+                } else if (GameState.phase === 'AFTERNOON') GameState.phase = 'NIGHT';
+                else if (GameState.phase === 'NIGHT') {
+                    GameState.phase = 'MORNING';
+                    GameState.night += 1;
+                    GameState.coins += 20; // Recompensa de sobrevivência
+                    showToast('Sobreviveu', 'Você recebeu 20 moedas!', 'success');
+                }
+
+                gameAPI.updatePhaseUI();
+            },
+
+            updatePhaseUI: () => {
+                const bg = document.getElementById('dynamic-bg');
+                const pM = document.getElementById('pill-morning');
+                const pA = document.getElementById('pill-afternoon');
+                const pN = document.getElementById('pill-night');
+                const actionBtn = document.getElementById('btn-next-label');
+
+                // Reset Pills
+                [pM, pA, pN].forEach(p => p.className = "px-4 py-1 rounded-full text-xs font-bold text-gray-500 transition-all duration-500");
+
+                const styleActive = (el, text, colorClass) => {
+                    el.className = `px-6 py-1.5 rounded-full text-sm font-black text-white ${colorClass} bg-opacity-80 shadow-lg border border-primary transition-all duration-500`;
+                    el.innerText = text;
+                };
+
+                // Apply Logic per Phase
+                if (GameState.phase === 'MORNING') {
+                    styleActive(pM, "MANHÃ", "bg-yellow-600");
+                    bg.style.filter = "hue-rotate(30deg) brightness(0.9)";
+                    document.getElementById('stage-title').innerText = `O NASCER DA NOITE ${GameState.night}`;
+                    document.getElementById('stage-desc').innerText = "Vá ao Depósito buscar suprimentos grátis para iniciar o dia.";
+
+                    document.getElementById('store-morning').classList.remove('hidden');
+                    document.getElementById('store-afternoon').classList.add('hidden');
+                    document.getElementById('store-night').classList.add('hidden');
+                    document.getElementById('panel-inventory').style.transform = "translateX(0)";
+
+                    // Hide placement rings if phase shifts
+                    GameState.placementModeActive = false;
+                    GameState.placementItemIndex = null;
+                    gameAPI.renderTrapSlots();
+
+                    actionBtn.innerText = "À TARDE";
+
+                } else if (GameState.phase === 'AFTERNOON') {
+                    styleActive(pA, "TARDE", "bg-orange-600");
+                    bg.style.filter = "hue-rotate(0deg) sepia(0.5) brightness(0.7)";
+                    document.getElementById('stage-title').innerText = `O DIA ESCURECE [NOITE ${GameState.night}]`;
+                    document.getElementById('stage-desc').innerText = "Venda objetos sem uso no Seu Zé antes do Sol se pôr.";
+
+                    document.getElementById('store-morning').classList.add('hidden');
+                    document.getElementById('store-afternoon').classList.remove('hidden');
+                    document.getElementById('store-night').classList.add('hidden');
+
+                    // Reset Seu Zé sell status
+                    GameState.hasSoldThisAfternoon = false;
+                    document.getElementById('btn-execute-trade').classList.remove('opacity-50', 'pointer-events-none');
+                    document.getElementById('btn-execute-trade').innerText = "FECHAR NEGÓCIO";
+                    [1, 2].forEach(s => {
+                        GameState.tradeSlots[s] = null;
+                        const el = document.getElementById(`trade-slot-${s}`);
+                        if (el) el.innerHTML = `<span class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>`;
+                    });
+
+                    // Reroll Seu Zé Inventory
+                    populateStoreGrid('trade-buy-grid', null);
+
+                    actionBtn.innerText = "NOITE";
+
+                } else if (GameState.phase === 'NIGHT') {
+                    styleActive(pN, "NOITE", "bg-purple-900");
+                    bg.style.filter = "hue-rotate(240deg) brightness(0.3) contrast(1.2)";
+                    document.getElementById('stage-title').innerText = `INVASÃO DA NOITE ${GameState.night}`;
+                    document.getElementById('stage-desc').innerText = "Eles estão no jardim. Defenda as Relíquias.";
+
+                    document.getElementById('store-morning').classList.add('hidden');
+                    document.getElementById('store-afternoon').classList.add('hidden');
+                    document.getElementById('store-night').classList.remove('hidden');
+                    document.getElementById('panel-inventory').style.transform = "translateX(-150%)";
+
+                    showToast('As Sombras Avançam!', 'Inimigos detectados.', 'warning');
+                    actionBtn.innerText = "LUTAR!";
+
+                    // Override action button for Night
+                    document.getElementById('btn-next-phase').onclick = () => {
+                        document.getElementById('btn-next-phase').classList.add('hidden');
+                        CombatSystem.startNight();
+                    };
+                }
+                gameAPI.updateHUD();
+            },
+
+            // --- Crafting API ---
+            renderCraftBook: () => {
+                const grid = document.getElementById('craft-book-grid');
+                if (!grid) return;
+
+                let htmlStr = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+
+                DB_RECIPES.forEach(recipe => {
+                    const reqDOM = recipe.req.map(id => {
+                        const item = gameAPI.getItemData(id);
+                        const hasConfig = GameState.inventory.find(i => i.itemId === id && i.quantity > 0);
+                        const colorClass = hasConfig ? 'text-green-400' : 'text-red-400';
+                        const iconClass = hasConfig ? 'check_circle' : 'cancel';
+                        return `<div class="flex items-center gap-1 text-[10px] bg-black/30 p-1 rounded border border-gray-700">
+                                    <span class="material-symbols-outlined text-[12px] ${colorClass}">${iconClass}</span>
+                                    <span class="truncate text-gray-300">${item ? item.name : '???'}</span>
+                                </div>`;
+                    }).join('');
+
+                    const isAfternoon = GameState.phase === 'AFTERNOON';
+                    const canCraft = isAfternoon && recipe.req.every(id => GameState.inventory.find(i => i.itemId === id && i.quantity > 0));
+                    const btnClass = canCraft
+                        ? 'bg-purple-600 hover:bg-purple-500 text-white cursor-pointer active:scale-95 shadow-[0_0_15px_rgba(147,51,234,0.5)]'
+                        : !isAfternoon
+                            ? 'bg-gray-800 text-gray-600 cursor-not-allowed opacity-40 italic'
+                            : 'bg-gray-800 text-gray-500 cursor-not-allowed opacity-50';
+                    const btnLabel = !isAfternoon ? 'Só na Tarde' : 'CRAFT';
+
+                    htmlStr += `
+                        <div class="bg-surface-darker rounded-xl border border-[#4a3b5c] p-4 flex flex-col gap-3 hover:border-purple-500 transition-colors">
+                            <div class="flex justify-between items-start">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-${recipe.color}-500/20 rounded border border-${recipe.color}-500 flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-2xl text-${recipe.color}-400">${recipe.icon}</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-gray-200">${recipe.name}</h4>
+                                        <div class="flex gap-2 text-[10px] mt-1 uppercase font-bold">
+                                            <span class="text-red-400 flex items-center"><span class="material-symbols-outlined text-[12px] mr-1">swords</span>${recipe.damage}</span>
+                                            <span class="text-blue-400 flex items-center"><span class="material-symbols-outlined text-[12px] mr-1">radar</span>${recipe.range}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-dashed border-gray-700">
+                                ${reqDOM}
+                            </div>
+                            <button onclick="${canCraft ? `gameAPI.craftItem(${recipe.id})` : ''}" class="w-full mt-2 px-4 py-2 font-sketch rounded-lg transition-transform ${btnClass}">${btnLabel}</button>
+                        </div>
+                    `;
+                });
+
+                grid.innerHTML = htmlStr + '</div>';
+            },
+
+            craftItem: (recipeId) => {
+                const recipe = DB_RECIPES.find(r => r.id === recipeId);
+                if (!recipe) return;
+
+                // Craft só permitido na Tarde
+                if (GameState.phase !== 'AFTERNOON') {
+                    showToast('Oficina Fechada', 'Você só pode construir armas durante a Tarde!', 'warning');
+                    return;
+                }
+
+                const canCraft = recipe.req.every(id => GameState.inventory.find(i => i.itemId === id && i.quantity > 0));
+                if (!canCraft) return;
+
+                // Consume materials
+                recipe.req.forEach(reqId => {
+                    const inv = GameState.inventory.find(i => i.itemId === reqId);
+                    inv.quantity -= 1;
+                });
+
+                // Add to crafted items tray
+                GameState.craftedItems.push({
+                    id: Date.now(),
+                    recipeId: recipe.id,
+                    name: recipe.name,
+                    icon: recipe.icon,
+                    color: recipe.color,
+                    damage: recipe.damage,
+                    range: recipe.range,
+                    type: recipe.type
+                });
+
+                showToast('Arma Construída!', `${recipe.name} foi adicionada aos Prontos para Uso!`, 'success');
+                gameAPI.renderInventory();
+                gameAPI.renderCraftBook(); // Refresh the craft book to update button states
+            },
+
+            triggerDestroyModal: (invIndex) => {
+                document.getElementById('btn-confirm-destroy-yes').setAttribute('onclick', `gameAPI.destroyInventoryItem(${invIndex}); closeModal('modal-confirm-destroy')`);
+                openModal('modal-confirm-destroy');
+            },
+
+            destroyInventoryItem: (invIndex) => {
+                const invItem = GameState.inventory[invIndex];
+                if (!invItem) return;
+
+                const itemData = gameAPI.getItemData(invItem.itemId);
+                invItem.quantity -= 1;
+                if (invItem.quantity <= 0) {
+                    GameState.inventory.splice(invIndex, 1);
+                }
+
+                showToast('Descartado', `1x ${itemData.name} foi jogado fora.`, 'info');
+                gameAPI.renderInventory();
+            },
+
+            recycleCraftedItem: (cItemIndex) => {
+                const cItem = GameState.craftedItems[cItemIndex];
+                if (!cItem) return;
+
+                const recipe = DB_RECIPES.find(r => r.id === cItem.recipeId);
+                if (recipe) {
+                    // Return ingredients to inventory
+                    recipe.req.forEach(reqId => {
+                        const existingInfo = GameState.inventory.find(i => i.itemId === reqId);
+                        if (existingInfo) {
+                            existingInfo.quantity += 1;
+                        } else {
+                            GameState.inventory.push({ itemId: reqId, quantity: 1 });
+                        }
+                    });
+                }
+
+                // Remove from tray
+                GameState.craftedItems.splice(cItemIndex, 1);
+                showToast('Reciclado', `${cItem.name} foi desmontado em peças base.`, 'success');
+                gameAPI.renderInventory();
+
+                // Enforce max capacity limit (8)
+                const currentInvCount = GameState.inventory.reduce((sum, item) => sum + item.quantity, 0);
+                if (currentInvCount > 8) {
+                    showToast('Sobrecarga na Mochila!', `Descarte ${currentInvCount - 8} itens para liberar espaço.`, 'error');
+                    // Adding a pulsing red glow around the inventory to enforce manual deletion
+                    const invPanel = document.getElementById('panel-inventory');
+                    if (invPanel) {
+                        invPanel.classList.add('ring-4', 'ring-red-500', 'animate-pulse');
+                        setTimeout(() => invPanel.classList.remove('ring-4', 'ring-red-500', 'animate-pulse'), 3000);
+                    }
+                }
+            },
+
+            togglePlacementMode: (craftedIndex) => {
+                if (GameState.phase !== 'MORNING' && GameState.phase !== 'AFTERNOON') {
+                    showToast('Inseguro!', 'Você não pode posicionar armadilhas durante o ataque!', 'warning');
+                    return;
+                }
+
+                if (GameState.placementModeActive && GameState.placementItemIndex === craftedIndex) {
+                    // Turn off
+                    GameState.placementModeActive = false;
+                    GameState.placementItemIndex = null;
+                    showToast('Cancelado', 'Modo de posicionamento cancelado.', 'info');
+                } else {
+                    // Turn on
+                    GameState.placementModeActive = true;
+                    GameState.placementItemIndex = craftedIndex;
+                    showToast('Posicionar Arma', 'Clique em um dos pontos brilhantes no mapa.', 'info');
+                }
+
+                gameAPI.renderInventory();
+                gameAPI.renderTrapSlots();
+            },
+
+            confirmPlacement: (slotId) => {
+                if (!GameState.placementModeActive || GameState.placementItemIndex === null) return;
+
+                const cItem = GameState.craftedItems[GameState.placementItemIndex];
+                const openSlot = GameState.trapSlots.find(s => s.id === slotId);
+
+                if (!cItem || !openSlot || openSlot.occupied) return;
+
+                // Reserve Slot
+                openSlot.occupied = true;
+
+                GameState.towers.push({
+                    id: cItem.id,
+                    x: openSlot.x,
+                    y: openSlot.y,
+                    range: cItem.range, // 1 grid base
+                    damage: cItem.damage,
+                    name: cItem.name,
+                    cooldown: 0,
+                    icon: cItem.icon,
+                    color: cItem.color,
+                    type: cItem.type,
+                    slotId: openSlot.id
+                });
+
+                // Remove from tray
+                GameState.craftedItems.splice(GameState.placementItemIndex, 1);
+
+                // Exit placement mode
+                GameState.placementModeActive = false;
+                GameState.placementItemIndex = null;
+
+                showToast('Armada!', `${cItem.name} posicionada para defesa!`, 'success');
+                gameAPI.renderInventory();
+                gameAPI.renderTrapSlots();
+                CombatSystem.renderTowers();
+            },
+
+            // Sell Selection Logic
+            openSellSelector: (slot) => {
+                if (GameState.hasSoldThisAfternoon) {
+                    showToast('Venda Fechada', 'Você já negociou com o Zé nesta tarde!', 'error');
+                    return;
+                }
+
+                GameState.currentSellSlotOpen = slot;
+                const grid = document.getElementById('sell-selector-grid');
+                grid.innerHTML = '';
+
+                // Filter items that we have and aren't already selected in another slot
+                const availableItems = [];
+                GameState.inventory.forEach((invItem, invIndex) => {
+                    if (invItem.quantity > 0) {
+                        // Check if this specific item is in another slot
+                        let qtyInSlots = 0;
+                        if (GameState.tradeSlots[1] && GameState.tradeSlots[1].invIndex === invIndex) qtyInSlots++;
+                        if (GameState.tradeSlots[2] && GameState.tradeSlots[2].invIndex === invIndex) qtyInSlots++;
+
+                        if (invItem.quantity > qtyInSlots) {
+                            availableItems.push({ invItem, invIndex });
+                        }
+                    }
+                });
+
+                if (availableItems.length === 0) {
+                    grid.innerHTML = '<p class="text-gray-400 p-4 col-span-2 text-center">Nenhum item disponível para venda.</p>';
+                } else {
+                    availableItems.forEach(data => {
+                        const item = gameAPI.getItemData(data.invItem.itemId);
+                        let sellVal = item.sell_coins > 0 ? item.sell_coins : 1; // Direct sell property
+
+                        grid.innerHTML += `
+                            <div onclick="gameAPI.selectItemToSell(${data.invIndex}, ${sellVal})" class="bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center hover:bg-primary/20 cursor-pointer border-transparent hover:border-primary transition-colors">
+                                <div class="w-10 h-10 bg-${item.color.split('-')[0]}-500/20 rounded flex items-center justify-center border border-${item.color.split('-')[0]}-500/50">
+                                    <span class="material-symbols-outlined text-${item.color}">${item.icon}</span>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex justify-between">
+                                        <span class="font-bold text-sm text-gray-200">${item.name}</span>
+                                    </div>
+                                    <span class="text-[10px] bg-black/50 px-2 rounded-full text-green-400 font-bold">Vender por ${sellVal} C</span>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                // Also add an option to clear the slot
+                if (GameState.tradeSlots[slot]) {
+                    grid.innerHTML += `
+                        <div onclick="gameAPI.clearSellSlot(${slot})" class="bg-red-900/30 p-2 rounded border border-red-900 flex gap-3 items-center hover:bg-red-500/20 cursor-pointer transition-colors col-span-2 justify-center">
+                            <span class="font-bold text-sm text-red-400">Remover do slot</span>
+                        </div>
+                     `;
+                }
+
+                openModal('modal-select-sell');
+            },
+
+            clearSellSlot: (slot) => {
+                GameState.tradeSlots[slot] = null;
+                document.getElementById(`trade-slot-${slot}`).innerHTML = `<span class="material-symbols-outlined text-gray-600 text-3xl pointer-events-none">add</span>`;
+                closeModal('modal-select-sell');
+            },
+
+            selectItemToSell: (invIndex, sellVal) => {
+                const itemData = gameAPI.getItemData(GameState.inventory[invIndex].itemId);
+                const slot = GameState.currentSellSlotOpen;
+
+                GameState.tradeSlots[slot] = { invIndex: invIndex, item: itemData, value: sellVal };
+
+                const elSlot = document.getElementById(`trade-slot-${slot}`);
+                elSlot.innerHTML = `
+                    <div class="pointer-events-none w-full h-full flex flex-col items-center justify-center p-2 bg-primary/10">
+                        <span class="material-symbols-outlined text-primary text-3xl">${itemData.icon}</span>
+                        <span class="text-[8px] mt-1 text-center font-bold text-gray-300">${itemData.name}</span>
+                        <span class="text-[10px] mt-1 bg-black/50 px-2 rounded-full text-green-400 font-bold">${sellVal} C</span>
+                    </div>
+                `;
+                closeModal('modal-select-sell');
+            },
+            executeTrade: () => {
+                if (GameState.hasSoldThisAfternoon) {
+                    showToast('Venda Fechada', 'Você já realizou vendas nesta tarde.', 'error');
+                    return;
+                }
+
+                let sold = 0; let totalCoins = 0;
+                [1, 2].forEach(s => {
+                    const t = GameState.tradeSlots[s];
+                    if (t) {
+                        sold++;
+                        totalCoins += t.value;
+                        GameState.inventory[t.invIndex].quantity -= 1; // consume item
+
+                        // Clear visual slot
+                        GameState.tradeSlots[s] = null;
+                        document.getElementById(`trade-slot-${s}`).innerHTML = `<span class="material-symbols-outlined text-gray-600 text-3xl pointer-events-none">add</span>`;
+                    }
+                });
+
+                if (sold > 0) {
+                    GameState.coins += totalCoins;
+                    GameState.hasSoldThisAfternoon = true;
+
+                    const btn = document.getElementById('btn-execute-trade');
+                    btn.classList.add('opacity-50', 'pointer-events-none');
+                    btn.innerText = "ESGOTADO";
+
+                    showToast('Venda Sucesso!', `Vendido ${sold} item(s) por ${totalCoins} Moedas.`, 'success');
+                    gameAPI.updateHUD();
+                    gameAPI.renderInventory();
+                    gameAPI.renderCraftBook();
+                } else {
+                    showToast('Bancada Vazia', 'Selecione itens para vender.', 'error');
+                }
+            },
+
+            buyItem: (itemId, isDiscounted, eTarget = null) => {
+                const itemRaw = gameAPI.getItemData(itemId);
+                if (!itemRaw) return;
+
+                const currentTotalItems = GameState.inventory.reduce((sum, item) => sum + item.quantity, 0);
+                if (currentTotalItems >= 8) {
+                    showToast('Mochila Cheia', 'Capacidade máxima de 8 itens atingida!', 'error');
+                    return;
+                }
+
+                // Limite de 2 compras em toda fase MORNING
+                if (GameState.phase === 'MORNING') {
+                    if (GameState.morningPurchases >= 2) {
+                        showToast('Limite Atingido', 'Você só pode pegar 2 itens por manhã!', 'warning');
+                        return;
+                    }
+                }
+
+                const item = { ...itemRaw };
+
+                // Logic based on unified item coin cost
+                if (item.buy_coins > 0) {
+                    if (GameState.coins >= item.buy_coins) {
+                        GameState.coins -= item.buy_coins;
+                    } else {
+                        showToast('Sem Moedas', `Necessário ${item.buy_coins} C.`, 'error');
+                        return;
+                    }
+                } // FREE items pass automatically
+
+                if (GameState.phase === 'MORNING') {
+                    GameState.morningPurchases++;
+                }
+
+                // Add to inventory
+                const existing = GameState.inventory.find(i => i.itemId === item.id);
+                if (existing) { existing.quantity++; }
+                else { GameState.inventory.push({ itemId: item.id, quantity: 1 }); }
+
+                gameAPI.updateHUD();
+                gameAPI.renderInventory();
+                gameAPI.renderCraftBook();
+                showToast('Compra Realizada', `${item.name} adicionado à mochila.`, 'success');
+
+                // Infinite Restock Logic for Seu Zé Store
+                if (isDiscounted && eTarget) {
+                    const pool = DB_ITEMS.filter(i => i.type === item.type);
+                    if (pool.length > 0) {
+                        const newItemRaw = pool[Math.floor(Math.random() * pool.length)];
+                        const newItem = { ...newItemRaw };
+                        let costStr = newItem.buy_coins > 0 ? `${newItem.buy_coins} C` : 'GRÁTIS';
+
+                        const usedInRecipes = DB_RECIPES.filter(r => r.req.includes(newItem.id)).map(r => r.name);
+                        let craftHintHtml = '';
+                        if (usedInRecipes.length > 0) {
+                            craftHintHtml = `
+                                <div class="absolute bottom-0 w-full left-0 bg-black/60 backdrop-blur-sm rounded-b-lg border-t border-gray-600 px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="text-[8px] text-gray-300 block text-center truncate italic"><span class="material-symbols-outlined text-[10px] align-middle mr-1 text-purple-400">handyman</span>${usedInRecipes.join(', ')}</span>
+                                </div>
+                            `;
+                        }
+
+                        // Rebuild HTML for just this card in-place
+                        eTarget.setAttribute("onclick", `gameAPI.buyItem(${newItem.id}, true, this)`);
+                        eTarget.innerHTML = `
+                            <span class="material-symbols-outlined text-gray-600 group-hover:text-primary text-3xl">${newItem.icon}</span>
+                            <span class="text-[10px] text-center font-bold text-gray-300 mt-2">${newItem.name}</span>
+                            <span class="absolute top-1 right-1 text-[8px] bg-black px-1 rounded border border-gray-600 text-${newItem.buy_coins > 0 ? 'yellow-500' : 'white'}">${costStr}</span>
+                            ${craftHintHtml}
+                        `;
+                    }
+                }
+            },
+
+            openBestiary: () => {
+                const grid = document.getElementById('bestiary-grid');
+                grid.innerHTML = '';
+
+                Object.keys(DB_ENEMIES).forEach(enemyKey => {
+                    const e = DB_ENEMIES[enemyKey];
+                    const html = `
+                        <div class="bg-black/40 rounded-xl overflow-hidden border-2 border-purple-900/50 flex flex-col hover:border-purple-500 transition-colors">
+                            <div class="h-32 bg-[#1a1625] relative flex items-center justify-center p-4">
+                                <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('${e.imgUrl}'); filter: blur(2px);"></div>
+                                <div class="w-20 h-20 rounded-full border-4 border-black shadow-[0_0_20px_rgba(147,51,234,0.3)] overflow-hidden relative z-10 bg-black">
+                                    <img src="${e.imgUrl}" class="w-full h-full object-cover" alt="${e.name}">
+                                </div>
+                            </div>
+                            <div class="p-4 flex flex-col gap-2 relative">
+                                <h3 class="text-2xl font-sketch text-purple-300 drop-shadow-md tracking-wider">${e.name}</h3>
+                                <div class="flex gap-2 text-[10px] font-bold uppercase tracking-wider mt-1">
+                                    <span class="bg-red-900/40 text-red-400 px-2 py-1 rounded border border-red-900/50 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">favorite</span> HP Base: ${e.hp}</span>
+                                    <span class="bg-blue-900/40 text-blue-400 px-2 py-1 rounded border border-blue-900/50 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">speed</span> VEL: ${e.speed}</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-2 leading-relaxed italic border-t border-purple-900/30 pt-2">"${e.name === 'Saci' ? 'Ágil e implacável. Gosta de esconder coisas, mas de noite ele não brinca em serviço.' : e.name === 'Cuca' ? 'Lenta porém formidável. Diz a lenda que seu chifre contém magia antiga.' : e.name === 'Curupira' ? 'Protetor da mata. Rápido, furioso e os pés virados enganam quem tenta fugir.' : e.name === 'Mula Sem Cabeça' ? 'Fogo em fúria. Corre enlouquecida destruindo tudo em seu caminho com HP altíssimo.' : 'Criatura folclórica.'}"</p>
+                            </div>
+                        </div>
+                    `;
+                    grid.innerHTML += html;
+                });
+
+                openModal('modal-bestiary');
+            },
+
+            openWeaponDetail: (cItemIndex) => {
+                const cItem = GameState.craftedItems[cItemIndex];
+                if (!cItem) return;
+
+                const recipe = DB_RECIPES.find(r => r.id === cItem.recipeId);
+
+                // Populate modal fields
+                document.getElementById('wdetail-name').innerText = cItem.name;
+                document.getElementById('wdetail-icon').innerText = cItem.icon;
+                document.getElementById('wdetail-icon').className = `material-symbols-outlined text-5xl text-${cItem.color}-400`;
+                document.getElementById('wdetail-range').innerText = cItem.range ?? recipe?.range ?? '-';
+                document.getElementById('wdetail-damage').innerText = cItem.damage ?? recipe?.damage ?? '-';
+                // Cadência: derivada do damage (mais poder = menor cadência geral; exibindo como category)
+                const cadLabels = { 0: 'Muito Alta', 1: 'Alta', 2: 'Alta', 3: 'Média', 4: 'Baixa', 5: 'Baixa', 6: 'Muito Baixa' };
+                document.getElementById('wdetail-cadencia').innerText = cadLabels[cItem.damage] ?? 'Normal';
+                document.getElementById('wdetail-type').innerText = cItem.type ?? recipe?.type ?? '-';
+
+                // Ingredients list
+                const ingGrid = document.getElementById('wdetail-ingredients');
+                ingGrid.innerHTML = '';
+                if (recipe) {
+                    recipe.req.forEach(reqId => {
+                        const item = gameAPI.getItemData(reqId);
+                        if (!item) return;
+                        ingGrid.innerHTML += `
+                            <div class="flex items-center gap-2 bg-black/30 p-2 rounded border border-gray-700">
+                                <span class="material-symbols-outlined text-sm text-${item.color}">${item.icon}</span>
+                                <span class="text-xs text-gray-300 truncate">${item.name}</span>
+                            </div>`;
+                    });
+                }
+
+                // Wire recycle button
+                document.getElementById('wdetail-recycle-btn').onclick = () => gameAPI.triggerRecycleModal(cItemIndex);
+
+                openModal('modal-weapon-detail');
+            },
+
+            triggerRecycleModal: (cItemIndex) => {
+                const cItem = GameState.craftedItems[cItemIndex];
+                if (!cItem) return;
+
+                const recipe = DB_RECIPES.find(r => r.id === cItem.recipeId);
+                const list = document.getElementById('recycle-ingredients-list');
+                list.innerHTML = '';
+
+                if (recipe) {
+                    recipe.req.forEach(reqId => {
+                        const item = gameAPI.getItemData(reqId);
+                        if (!item) return;
+                        list.innerHTML += `
+                            <div class="flex items-center gap-2 bg-black/30 p-2 rounded border border-green-900/50">
+                                <span class="material-symbols-outlined text-sm text-${item.color}">${item.icon}</span>
+                                <span class="text-xs text-gray-200 truncate">1x ${item.name}</span>
+                            </div>`;
+                    });
+                }
+
+                document.getElementById('btn-confirm-recycle-yes').onclick = () => {
+                    closeModal('modal-confirm-recycle');
+                    closeModal('modal-weapon-detail');
+                    gameAPI.recycleCraftedItem(cItemIndex);
+                };
+
+                openModal('modal-confirm-recycle');
+            }
+        };
+
+        // --- AUTO BATTLER SYSTEM (NIGHT) ---
+        const CombatSystem = {
+            waypoints: [
+                { x: 15, y: 10 },  // WP0: Spawn Exerno Top-Left
+                { x: 15, y: 95 },  // WP1: Externo Bottom-Left
+                { x: 85, y: 95 },  // WP2: Externo Bottom-Right
+                { x: 85, y: 15 },  // WP3: Externo Top-Right
+                { x: 35, y: 15 },  // WP4: Interno Top-Left
+                { x: 35, y: 80 },  // WP5: Interno Bottom-Left
+                { x: 65, y: 80 },  // WP6: Interno Bottom-Right
+                { x: 65, y: 50 }   // WP7: Relíquias - Fim
+            ],
+
+            startNight: () => {
+                const enemiesToSpawn = STAGES[GameState.night] || ['A', 'B', 'C'];
+                let delay = 0;
+
+                // Draw fixed Towers
+                CombatSystem.renderTowers();
+
+                enemiesToSpawn.forEach((enType, index) => {
+                    setTimeout(() => CombatSystem.spawnEnemy(enType, index), delay);
+                    delay += 1500; // 1.5s between spawns
+                });
+
+                if (!GameState.gameLoopId) {
+                    GameState.gameLoopId = setInterval(CombatSystem.tick, 100); // 10 ticks per second
+                }
+            },
+
+            spawnEnemy: (type, id) => {
+                const data = DB_ENEMIES[type];
+                if (!data) return;
+
+                // Create DOM Element
+                const board = document.getElementById('board-container');
+                const el = document.createElement('div');
+                el.className = "absolute z-30 flex flex-col items-center transition-all duration-100 -translate-x-1/2 -translate-y-1/2";
+
+                // Start position (Waypoint 0)
+                const startX = CombatSystem.waypoints[0].x;
+                const startY = CombatSystem.waypoints[0].y;
+
+                el.style.left = startX + '%';
+                el.style.top = startY + '%';
+
+                el.innerHTML = `
+                    <div class="w-12 h-1.5 bg-black rounded-full mb-1 overflow-hidden border border-white/20">
+                        <div id="hp-${id}" class="bg-${data.color}-500 h-full w-full transition-all"></div>
+                    </div>
+                    <div class="w-14 h-14 bg-${data.color}-900/80 rounded-full border-2 border-${data.color}-500 flex items-center justify-center shadow-[0_0_15px_currentColor]">
+                        <span class="material-symbols-outlined text-3xl text-white">${data.icon}</span>
+                    </div>
+                    <span class="text-[10px] font-bold text-${data.color}-400 mt-1 bg-black/50 px-1 rounded">${data.name}</span>
+                `;
+
+                board.appendChild(el);
+
+                GameState.activeEnemies.push({
+                    sysId: id,
+                    type: data.name,
+                    hp: data.hp,
+                    maxHp: data.hp,
+                    x: startX,
+                    y: startY,
+                    wpIndex: 1, // Moving towards waypoint index 1
+                    speed: data.speed,
+                    el: el
+                });
+            },
+
+            renderTowers: () => {
+                const board = document.getElementById('board-container');
+
+                // Clear all previous tower elements
+                board.querySelectorAll('.tower-element').forEach(el => el.remove());
+
+                GameState.towers.forEach(t => {
+                    const el = document.createElement('div');
+                    el.id = `tower-${t.id}`;
+                    el.className = "tower-element absolute z-20 flex flex-col items-center group/tower transform -translate-x-1/2 -translate-y-1/2";
+                    el.style.left = t.x + '%';
+                    el.style.top = t.y + '%';
+
+                    // User request: Expand radius by +15px. Previously was 30px radius (100px dia due to 40px center offset). Now 45px radius = 130px total diameter.
+                    const rangeSize = '130px';
+
+                    el.innerHTML = `
+                        <div class="relative w-12 h-12 flex items-center justify-center transform transition-transform group-hover/tower:scale-110 cursor-pointer" onclick="this.querySelector('.range-indicator').classList.toggle('opacity-0'); this.querySelector('.range-indicator').classList.toggle('opacity-100');">
+                            <!-- Flat Grid Range indicator (Round, Toggled on Click, 20px radial) -->
+                            <div class="range-indicator opacity-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-${t.color.split('-')[0]}-500/50 bg-${t.color.split('-')[0]}-500/10 pointer-events-none transition-opacity duration-300" style="width: ${rangeSize}; height: ${rangeSize};"></div>
+                            
+                            <!-- Base graphic -->
+                            <div class="w-10 h-10 bg-[#1a1625] rounded-full border-2 border-${t.color.split('-')[0]}-500 shadow-[0_0_15px_currentColor] flex items-center justify-center overflow-hidden relative">
+                                <span class="material-symbols-outlined text-2xl text-${t.color.split('-')[0]}-400 drop-shadow-md z-10">${t.icon}</span>
+                                <div class="absolute inset-0 bg-black/50 z-20" style="clip-path: inset(${100 - (t.cooldown / 60) * 100}% 0 0 0)"></div>
+                            </div>
+                            <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-bold text-gray-300 bg-black/80 px-2 py-0.5 rounded opacity-0 group-hover/tower:opacity-100 transition-opacity whitespace-nowrap z-30 border border-gray-600">${t.name}</span>
+                        </div>
+                    `;
+                    board.appendChild(el);
+                });
+            },
+
+            tick: () => {
+                let enemiesAlive = 0;
+
+                const board = document.getElementById('board-container');
+                const bWidth = board.clientWidth || window.innerWidth;
+                const bHeight = board.clientHeight || window.innerHeight;
+
+                // 1. Tower Cooldowns and Attacking
+                GameState.towers.forEach(t => {
+                    if (t.cooldown > 0) t.cooldown--;
+
+                    if (t.cooldown === 0) {
+                        // Find target in range using actual pixel distance to match exactly 45px radial layout
+                        const target = GameState.activeEnemies.find(e => {
+                            if (e.hp <= 0) return false;
+                            const dxPx = (e.x - t.x) * bWidth / 100;
+                            const dyPx = (e.y - t.y) * bHeight / 100;
+                            const distPx = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
+
+                            // 45px visible radius padding from the edge of a 40px object is exactly 65px from the absolute center geometry. (+15px request bump) -> +28px for border trigger
+                            return distPx <= (65 + 28);
+                        });
+
+                        if (target) {
+                            // FIRE!
+                            target.hp -= t.damage;
+                            t.cooldown = 45; // 4.5 seconds cooldown. Slow enough that two enemies stringed together will slip by without combo traps.
+
+                            // Visual Shot Line
+                            CombatSystem.drawLaser(t.x, t.y, target.x, target.y, t.color);
+
+                            // Visual UI Damage
+                            target.el.classList.add('brightness-200', 'scale-90');
+                            setTimeout(() => target.el.classList.remove('brightness-200', 'scale-90'), 150);
+
+                            const hpBar = target.el.querySelector(`#hp-${target.sysId}`);
+                            if (hpBar) hpBar.style.width = Math.max(0, (target.hp / target.maxHp) * 100) + '%';
+                        }
+                    }
+                });
+
+                // 2. Enemy Movement & Death
+                GameState.activeEnemies.forEach((e, i) => {
+                    if (e.hp <= 0) {
+                        // Dead
+                        if (e.el && e.el.parentNode) {
+                            e.el.classList.add('opacity-0', 'scale-150');
+                            setTimeout(() => { if (e.el.parentNode) e.el.parentNode.removeChild(e.el); }, 300);
+                        }
+                        GameState.activeEnemies.splice(i, 1);
+                        return; // continue
+                    }
+
+                    enemiesAlive++;
+
+                    // Pathfinding routing logic
+                    const targetWP = CombatSystem.waypoints[e.wpIndex];
+                    if (!targetWP) return;
+
+                    const dx = targetWP.x - e.x;
+                    const dy = targetWP.y - e.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const step = e.speed * 0.1; // tick scaling
+
+                    if (dist < step) {
+                        // Reached Waypoint
+                        e.x = targetWP.x;
+                        e.y = targetWP.y;
+                        e.wpIndex++;
+
+                        // Check if reached end of screen (Quarto dos Pais)
+                        if (e.wpIndex >= CombatSystem.waypoints.length) {
+                            CombatSystem.takeRelicDamage();
+                            e.hp = 0; // kill unit
+                        }
+                    } else {
+                        // Move towards Waypoint
+                        e.x += (dx / dist) * step;
+                        e.y += (dy / dist) * step;
+                    }
+
+                    e.el.style.left = e.x + '%';
+                    e.el.style.top = e.y + '%';
+                });
+
+                // 3. End of Night Condition
+                if (enemiesAlive === 0 && GameState.activeEnemies.length === 0) {
+                    // Check if we queued all spawns (simplistic check for demo)
+                    // Let's assume after a few seconds of no enemies, night ends
+                    setTimeout(() => {
+                        if (GameState.activeEnemies.length === 0) {
+                            CombatSystem.endNight();
+                        }
+                    }, 2000);
+                }
+            },
+
+            drawLaser: (startX, startY, endX, endY, colorClass) => {
+                const board = document.getElementById('board-container');
+                const laser = document.createElement('div');
+                const baseColor = colorClass || 'yellow';
+                laser.className = `absolute h-1 bg-${baseColor}-400 shadow-[0_0_10px_currentColor] origin-left pointer-events-none z-40 transition-opacity duration-300`;
+
+                laser.style.left = startX + '%';
+                laser.style.top = startY + '%';
+
+                // Calc width
+                const dx = endX - startX;
+                const dy = endY - startY;
+                const width = Math.sqrt(dx * dx + dy * dy);
+                laser.style.width = width + '%';
+
+                // Calc angle
+                const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+                laser.style.transform = `rotate(${angle}deg)`;
+
+                board.appendChild(laser);
+
+                setTimeout(() => {
+                    laser.classList.add('opacity-0');
+                    setTimeout(() => laser.parentNode.removeChild(laser), 300);
+                }, 50);
+            },
+
+            takeRelicDamage: () => {
+                GameState.relics--;
+                gameAPI.updateHUD();
+                showToast('INVASÃO!', 'Uma relíquia foi destruída!', 'error');
+
+                // Flash whole screen red
+                const bg = document.getElementById('dynamic-bg');
+                bg.classList.add('bg-red-900/50');
+                setTimeout(() => bg.classList.remove('bg-red-900/50'), 300);
+
+                if (GameState.relics <= 0) {
+                    clearInterval(GameState.gameLoopId);
+                    showToast('GAME OVER', 'Todas as relíquias foram roubadas.', 'error');
+                    setTimeout(() => location.reload(), 3000);
+                }
+            },
+
+            endNight: () => {
+                if (!GameState.gameLoopId) return; // already ended
+                clearInterval(GameState.gameLoopId);
+                GameState.gameLoopId = null;
+
+                showToast('NOITE SOBREVIVIDA!', 'O sol está raiando novamente...', 'success');
+
+                // Return Next Phase button
+                const btn = document.getElementById('btn-next-phase');
+                btn.classList.remove('hidden');
+                btn.onclick = gameAPI.advancePhase;
+
+                // Force state advance
+                setTimeout(() => gameAPI.advancePhase(), 2000);
+            }
+        };
+
+        // Init Stores (Populate Popups mockly for view purposes)
+        const populateStoreGrid = (id, filtersType) => {
+            const grid = document.getElementById(id);
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            let itemsList = [];
+
+            if (id === 'trade-buy-grid') {
+                const essentialItems = DB_ITEMS.filter(i => i.type === 'ESSENTIAL').sort(() => 0.5 - Math.random()).slice(0, 5);
+                const supportItems = DB_ITEMS.filter(i => i.type === 'SUPPORT').sort(() => 0.5 - Math.random()).slice(0, 5);
+                itemsList = [...essentialItems, ...supportItems].sort(() => 0.5 - Math.random());
+            } else if (filtersType) {
+                itemsList = DB_ITEMS.filter(i => filtersType.includes(i.type));
+            }
+
+            itemsList.forEach(rawItem => {
+                // Clone item to avoid modifying DB constantly
+                let item = { ...rawItem };
+
+                // Removed Half Price (Base costs in DB_ITEMS will be 1-20 natively now)
+
+                let costStr = item.buy_coins > 0 ? `${item.buy_coins} C` : 'GRÁTIS';
+
+                // --- Find recipes that use this item ---
+                const usedInRecipes = DB_RECIPES.filter(r => r.req.includes(item.id)).map(r => r.name);
+                let craftHintHtml = '';
+                if (usedInRecipes.length > 0) {
+                    craftHintHtml = `
+                        <div class="absolute bottom-0 w-full left-0 bg-black/60 backdrop-blur-sm rounded-b-lg border-t border-gray-600 px-1 py-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <span class="text-[8px] text-gray-300 block text-center truncate italic"><span class="material-symbols-outlined text-[10px] align-middle mr-1 text-purple-400">handyman</span>${usedInRecipes.join(', ')}</span>
+                        </div>
+                    `;
+                }
+
+                grid.innerHTML += `
+                    <div onclick="gameAPI.buyItem(${item.id}, ${id === 'trade-buy-grid'}, this)" class="aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-primary cursor-pointer transition-colors group p-2 relative active:scale-95">
+                        <span class="material-symbols-outlined text-gray-600 group-hover:text-primary text-3xl">${item.icon}</span>
+                        <span class="text-[10px] text-center font-bold text-gray-300 mt-2">${item.name}</span>
+                        <span class="absolute top-1 right-1 text-[8px] bg-black px-1 rounded border border-gray-600 text-${item.buy_coins > 0 ? 'yellow-500' : 'white'}">${costStr}</span>
+                        ${craftHintHtml}
+                    </div>
+                `;
+            });
+        }
+
+        populateStoreGrid('store-items-grid', ['FREE', 'ONE_COIN']);
+
+    </script>
+</body>
+
+</html>

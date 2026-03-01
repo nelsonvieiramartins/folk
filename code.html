@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Project Folk: Preparação da Manhã</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FFD700", "primary-dark": "#D4AF37",
+                        "background-light": "#FFF8E1",
+                        "background-dark": "#1a1625", "surface-dark": "#2d2438",
+                        "surface-darker": "#15121e",
+                        "accent-blue": "#4fc3f7",
+                        "accent-red": "#ff5252",
+                        "craft-brown": "#8d6e63",
+                    },
+                    fontFamily: {
+                        display: ["Spline Sans", "sans-serif"],
+                        handwritten: ["Permanent Marker", "cursive"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        full: "9999px",
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://www.transparenttextures.com/patterns/notebook.png')",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+        }
+
+        .font-sketch {
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #2d2438;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 5px;
+            border: 2px solid #2d2438;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        .wiggle-hover:hover {
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-100 overflow-hidden h-screen flex flex-col">
+    <header
+        class="flex items-center justify-between whitespace-nowrap border-b-4 border-dashed border-[#4a3b5c] bg-surface-darker px-6 py-3 shrink-0 z-50 relative">
+        <div class="flex items-center gap-4 text-white">
+            <div
+                class="size-10 flex items-center justify-center rounded-full bg-primary text-background-dark shadow-[0_0_15px_rgba(255,215,0,0.4)] border-2 border-white">
+                <span class="material-symbols-outlined font-bold">toys</span>
+            </div>
+            <h2 class="text-white text-xl font-sketch leading-tight tracking-wider text-primary drop-shadow-md">Project
+                Folk</h2>
+        </div>
+        <div class="absolute left-1/2 -translate-x-1/2 top-2 flex flex-col items-center">
+            <div class="flex items-center gap-0 bg-surface-dark rounded-full p-1 border-2 border-[#4a3b5c] shadow-lg">
+                <div
+                    class="px-6 py-1.5 rounded-full bg-yellow-600/30 text-primary text-sm font-black border border-primary shadow-[0_0_10px_rgba(255,215,0,0.5)]">
+                    MANHÃ</div>
+                <a href="tarde.html"
+                    class="px-4 py-1 rounded-full text-xs font-bold text-gray-500 hover:text-white transition-colors cursor-pointer">TARDE</a>
+                <div class="px-4 py-1 rounded-full text-xs font-bold text-gray-500">NOITE</div>
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Sobrevivência</span>
+                <span class="text-xl font-sketch text-white">MANHÃ <span class="text-primary">05</span>/20</span>
+            </div>
+            <div class="flex items-center gap-2 bg-[#2d2438] px-3 py-1.5 rounded-lg border border-[#4a3b5c]">
+                <span
+                    class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current">favorite</span>
+                <span
+                    class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current">favorite</span>
+                <span class="material-symbols-outlined text-gray-600">favorite_border</span>
+                <span class="text-xs text-gray-300 ml-1 font-bold">Relíquia</span>
+            </div>
+            <button
+                class="flex items-center justify-center overflow-hidden rounded-xl h-10 w-10 bg-[#4a3b5c] hover:bg-[#5e4b75] text-white transition-colors">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+        </div>
+    </header>
+    <main class="flex flex-1 overflow-hidden relative">
+        <aside
+            class="w-80 bg-[#251e30] border-r-4 border-[#4a3b5c] flex flex-col z-20 shadow-2xl overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
+            <div class="p-4 border-b-2 border-dashed border-[#4a3b5c] bg-[#1f1929]">
+                <h3 class="text-primary text-lg font-sketch uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined text-white">construction</span>
+                    Oficina &amp; Inventário
+                </h3>
+                <p class="text-gray-400 text-xs mt-1 font-mono">Recursos coletados no quintal</p>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div>
+                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Bancada de Criação</h4>
+                    <div class="grid grid-cols-2 gap-2" id="craft-bench">
+                        <div id="craft-slot-1"
+                            class="craft-slot aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-primary cursor-pointer transition-colors group relative overflow-hidden"
+                            ondragover="allowDrop(event)" ondrop="drop(event, 1)">
+                            <span
+                                class="material-symbols-outlined text-gray-600 group-hover:text-primary text-3xl pointer-events-none"
+                                id="slot-icon-1">add</span>
+                            <div id="slot-content-1"
+                                class="absolute inset-0 flex flex-col items-center justify-center hidden pointer-events-none">
+                            </div>
+                        </div>
+                        <div id="craft-slot-2"
+                            class="craft-slot aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-primary cursor-pointer transition-colors group relative overflow-hidden"
+                            ondragover="allowDrop(event)" ondrop="drop(event, 2)">
+                            <span
+                                class="material-symbols-outlined text-gray-600 group-hover:text-primary text-3xl pointer-events-none"
+                                id="slot-icon-2">add</span>
+                            <div id="slot-content-2"
+                                class="absolute inset-0 flex flex-col items-center justify-center hidden pointer-events-none">
+                            </div>
+                        </div>
+                    </div>
+                    <button id="btn-combine" onclick="combineItems()"
+                        class="w-full mt-2 bg-craft-brown hover:bg-[#7a5e55] text-white font-bold py-2 rounded border-b-4 border-[#5d4037] active:border-b-0 active:mt-3 active:mb-[-1px] transition-all">
+                        COMBINAR
+                    </button>
+                </div>
+                <hr class="border-[#4a3b5c]" />
+                <div>
+                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Mochila</h4>
+                    <div class="space-y-2">
+                        <div id="item-nerf" draggable="true" ondragstart="drag(event)" data-id="nerf"
+                            data-name="Pistola Nerf" data-icon="water_drop" data-color="orange-500"
+                            class="inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]">
+                            <div
+                                class="w-10 h-10 bg-orange-500/20 rounded flex items-center justify-center border border-orange-500/50 pointer-events-none">
+                                <span class="material-symbols-outlined text-orange-400">water_drop</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-bold text-sm text-gray-200">Pistola Nerf</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x1</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Base para torreta</span>
+                            </div>
+                        </div>
+                        <div id="item-copper" draggable="true" ondragstart="drag(event)" data-id="copper"
+                            data-name="Fios de Cobre" data-icon="all_inclusive" data-color="blue-500"
+                            class="inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]">
+                            <div
+                                class="w-10 h-10 bg-blue-500/20 rounded flex items-center justify-center border border-blue-500/50 pointer-events-none">
+                                <span class="material-symbols-outlined text-blue-400">all_inclusive</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-bold text-sm text-gray-200">Fios de Cobre</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x3</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Condutor elétrico</span>
+                            </div>
+                        </div>
+                        <div id="item-string" draggable="true" ondragstart="drag(event)" data-id="string"
+                            data-name="Barbante" data-icon="texture" data-color="yellow-500"
+                            class="inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]">
+                            <div
+                                class="w-10 h-10 bg-yellow-500/20 rounded flex items-center justify-center border border-yellow-500/50 pointer-events-none">
+                                <span class="material-symbols-outlined text-yellow-400">texture</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-bold text-sm text-gray-200">Barbante</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x5</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Material de ligação</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <section class="flex-1 relative bg-[#0a0810] overflow-hidden">
+            <div class="absolute inset-0 bg-cover bg-center opacity-60 mix-blend-overlay"
+                data-alt="Morning bright abstract background"
+                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSPCybzV9Fo0dPR75DM3-zA_obX1LsPzKfDv0TceZoher6-HeEltE5EJGUKH__5QVk6CdApQ22bsOOuQ6kRwbwtGpRrHueIb-KIdB67xa50ReHMpPKXdLfdZPUxS4Ndvjne9l0oKbuIrW_pMDcXSWC1UfR34X5tu5UN_6VHehp9a_-y34qpG8zLJZeWnOcYXU10_U3JSexlXNKBXMh06jgeqVUEmFjzgLQYlUO4NMiBy5_NI_zwy1Y1kxvdcot35lY0wku1ncJWgzr'); filter: hue-rotate(30deg) brightness(0.8) contrast(1.1);">
+            </div>
+            <div class="absolute inset-0" style="background-image: 
+            linear-gradient(rgba(74, 59, 92, 0.2) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(74, 59, 92, 0.2) 1px, transparent 1px);
+            background-size: 50px 50px; opacity: 0.5;"></div>
+            <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+                <path d="M -50 300 C 200 300, 300 200, 500 400 S 800 500, 1000 300 L 1400 300" fill="none"
+                    stroke="#FFD700" stroke-dasharray="20 20" stroke-linecap="round" stroke-opacity="0.15"
+                    stroke-width="60"></path>
+                <path d="M -50 300 C 200 300, 300 200, 500 400 S 800 500, 1000 300 L 1400 300" fill="none"
+                    stroke="#FFD700" stroke-dasharray="10 10" stroke-opacity="0.4" stroke-width="4"></path>
+            </svg>
+            <div class="absolute inset-0">
+                <div
+                    class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-10 w-48 h-64 bg-[#2d2438] border-l-4 border-[#4a3b5c] shadow-[0_0_50px_rgba(255,215,0,0.2)] z-10 flex flex-col justify-center pl-4">
+                    <div class="text-primary font-sketch text-2xl rotate-90 origin-left translate-x-8">NOSSA BASE</div>
+                </div>
+                <div class="absolute left-0 top-[250px] -translate-x-10 w-32 h-32 rounded-full bg-green-900/30 blur-xl">
+                </div>
+                <div id="map-fan"
+                    onclick="interactMap('Armadilha de Água', 'Um ventilador com Pistola Nerf! Tática defensiva ativada.')"
+                    class="absolute top-[350px] left-[450px] flex flex-col items-center z-20 group cursor-pointer transition-transform hover:scale-110">
+                    <div class="relative w-20 h-20">
+                        <div
+                            class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full border border-primary/30 bg-primary/10 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity">
+                        </div>
+                        <div
+                            class="w-full h-full bg-[#1a1625] rounded-full border-2 border-primary shadow-[0_0_15px_rgba(255,215,0,0.3)] flex items-center justify-center overflow-hidden relative">
+                            <span class="material-symbols-outlined text-4xl text-gray-400 animate-spin"
+                                style="animation-duration: 3s;">mode_fan</span>
+                            <span class="material-symbols-outlined text-2xl text-orange-400 absolute">water_drop</span>
+                        </div>
+                        <div
+                            class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-black/80 px-2 rounded border border-gray-600">
+                            <span class="text-[10px] text-white font-bold whitespace-nowrap">Ventilador + Nerf</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="map-glue"
+                    onclick="interactMap('Cola Quente', 'Isso pode grudar os inimigos no chão temporariamente.')"
+                    class="absolute top-[200px] left-[700px] flex flex-col items-center z-20 group cursor-pointer transition-transform hover:scale-110">
+                    <div class="relative w-16 h-16">
+                        <div
+                            class="w-full h-full bg-[#1a1625] rounded-lg border-2 border-white/50 shadow-lg flex items-center justify-center transform rotate-12">
+                            <span
+                                class="material-symbols-outlined text-3xl text-yellow-200">sentiment_very_dissatisfied</span>
+                        </div>
+                        <div
+                            class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-black/80 px-2 rounded border border-gray-600 z-10">
+                            <span class="text-[10px] text-white font-bold whitespace-nowrap">Cola Quente</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="enemy-saci" onclick="attackEnemy(this, 'Saci')"
+                    class="absolute top-[280px] left-[200px] z-30 animate-bounce cursor-crosshair group hover:brightness-150 transition-all"
+                    style="animation-duration: 1.5s;">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-1.5 bg-black rounded-full mb-1 overflow-hidden border border-white/20">
+                            <div class="bg-red-500 h-full w-[80%]"></div>
+                        </div>
+                        <div
+                            class="w-14 h-14 bg-red-900/80 rounded-full border-2 border-red-500 flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+                            <span class="material-symbols-outlined text-3xl text-white">do_not_step</span>
+                        </div>
+                        <span class="text-xs font-bold text-red-400 mt-1 bg-black/50 px-1 rounded">Saci</span>
+                    </div>
+                </div>
+                <div id="enemy-cuca" onclick="attackEnemy(this, 'Cuca Jr.')"
+                    class="absolute top-[380px] left-[600px] z-30 cursor-crosshair group hover:brightness-150 transition-all hover:scale-105">
+                    <div class="flex flex-col items-center">
+                        <div class="w-12 h-1.5 bg-black rounded-full mb-1 overflow-hidden border border-white/20">
+                            <div class="bg-red-500 h-full w-[40%]"></div>
+                        </div>
+                        <div
+                            class="w-16 h-16 bg-green-900/80 rounded-full border-2 border-green-500 flex items-center justify-center shadow-[0_0_15px_rgba(34,197,94,0.4)]">
+                            <span class="material-symbols-outlined text-4xl text-white">sentiment_neutral</span>
+                        </div>
+                        <span class="text-xs font-bold text-green-400 mt-1 bg-black/50 px-1 rounded">Cuca (Jr.)</span>
+                    </div>
+                </div>
+                <div
+                    class="absolute top-[390px] left-[580px] text-primary font-sketch text-2xl font-bold animate-ping opacity-75 z-40">
+                    POW!</div>
+            </div>
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-full max-w-3xl px-4 z-40">
+                <div
+                    class="bg-[#1f1929]/95 backdrop-blur border-2 border-[#4a3b5c] rounded-2xl p-3 shadow-2xl flex items-center justify-between gap-6 relative">
+                    <div
+                        class="absolute -top-5 left-8 bg-[#2d2438] border-2 border-[#4a3b5c] px-3 py-1 rounded-t-lg flex items-center gap-2 shadow-lg">
+                        <div class="w-5 h-5 rounded-full bg-red-600 border border-white flex items-center justify-center text-[8px] font-bold text-white shadow-sm transition-transform duration-300"
+                            id="caps-icon">Cola</div>
+                        <span id="caps-count" class="text-white font-bold font-mono transition-colors">145
+                            Tampinhas</span>
+                    </div>
+                    <div class="flex items-center gap-4 flex-1 justify-center pl-4">
+                        <button onclick="actionButton('Craft')"
+                            class="flex flex-col items-center justify-center w-20 h-20 bg-craft-brown hover:bg-[#a1887f] text-white rounded-xl border-b-4 border-[#5d4037] active:border-b-0 active:translate-y-1 transition-all group">
+                            <span
+                                class="material-symbols-outlined text-3xl mb-1 group-hover:rotate-12 transition-transform">handyman</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider">Craft</span>
+                        </button>
+                        <button onclick="actionButton('Action')"
+                            class="relative flex flex-col items-center justify-center w-24 h-24 bg-primary text-background-dark rounded-xl border-b-8 border-primary-dark active:border-b-0 active:translate-y-2 transition-all shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:brightness-110 -mt-6 z-10 wiggle-hover">
+                            <span
+                                class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white">HOT</span>
+                            <span class="material-symbols-outlined text-5xl mb-1">flash_on</span>
+                            <span class="text-xs font-black uppercase tracking-wider font-sketch">ACTION</span>
+                        </button>
+                        <button onclick="recycleAction()"
+                            class="flex flex-col items-center justify-center w-20 h-20 bg-[#2d2438] hover:bg-green-700/50 text-white rounded-xl border-b-4 border-[#15121e] active:border-b-0 active:translate-y-1 transition-all group border-2 border-green-800/50">
+                            <span
+                                class="material-symbols-outlined text-3xl mb-1 text-green-400 group-hover:scale-110 transition-transform">recycling</span>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-green-200">Recycle</span>
+                        </button>
+                    </div>
+                    <div class="flex flex-col gap-2 border-l border-[#4a3b5c] pl-4">
+                        <button onclick="actionButton('Pause')"
+                            class="w-10 h-10 rounded-lg bg-[#251e30] hover:bg-[#352b42] flex items-center justify-center border border-[#4a3b5c] text-gray-400 hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-sm">pause</span>
+                        </button>
+                        <button onclick="actionButton('Zoom')"
+                            class="w-10 h-10 rounded-lg bg-[#251e30] hover:bg-[#352b42] flex items-center justify-center border border-[#4a3b5c] text-gray-400 hover:text-white transition-colors">
+                            <span class="material-symbols-outlined text-sm">zoom_out_map</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <div id="toast-container" class="absolute top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // System State
+        let craftSlots = { 1: null, 2: null };
+        let capsCount = 145;
+
+        // Toast Notification System
+        function showToast(title, message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let bgColor = type === 'success' ? 'bg-green-600/90 border-green-400' :
+                type === 'error' ? 'bg-red-600/90 border-red-400' :
+                    type === 'warning' ? 'bg-yellow-600/90 border-yellow-400' :
+                        'bg-surface-dark border-primary';
+
+            let icon = type === 'success' ? 'check_circle' :
+                type === 'error' ? 'error' :
+                    type === 'warning' ? 'warning' : 'info';
+
+            toast.className = `flex items-center gap-3 p-3 rounded-lg border shadow-lg text-white ${bgColor} transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+            <span class="material-symbols-outlined">${icon}</span>
+            <div class="flex flex-col">
+                <span class="font-bold text-sm">${title}</span>
+                ${message ? `<span class="text-xs text-gray-200">${message}</span>` : ''}
+            </div>
+        `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            });
+
+            // Set removing timeout
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Drag and Drop Logic
+        function drag(ev) {
+            const target = ev.currentTarget;
+            const itemData = {
+                id: target.getAttribute('data-id'),
+                name: target.getAttribute('data-name'),
+                icon: target.getAttribute('data-icon'),
+                color: target.getAttribute('data-color')
+            };
+            ev.dataTransfer.setData("text", JSON.stringify(itemData));
+            ev.dataTransfer.effectAllowed = "copy";
+
+            // Add visual cue
+            target.classList.add('opacity-50');
+        }
+
+        // Bind dragend to all items globally
+        document.querySelectorAll('.inventory-item').forEach(item => {
+            item.addEventListener('dragend', function () {
+                this.classList.remove('opacity-50');
+            });
+        });
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "copy";
+        }
+
+        function drop(ev, slotNumber) {
+            ev.preventDefault();
+            try {
+                const dataStr = ev.dataTransfer.getData("text");
+                if (!dataStr) return;
+                const itemData = JSON.parse(dataStr);
+                console.log("Dropped", itemData, "into slot", slotNumber);
+
+                craftSlots[slotNumber] = itemData;
+
+                // Update Slot UI
+                const slot = document.getElementById(`craft-slot-${slotNumber}`);
+                const iconWrap = document.getElementById(`slot-icon-${slotNumber}`);
+                const content = document.getElementById(`slot-content-${slotNumber}`);
+
+                iconWrap.classList.add('hidden');
+                content.classList.remove('hidden');
+
+                content.innerHTML = `
+                <div class="w-8 h-8 bg-${itemData.color.split('-')[0]}-500/20 rounded flex items-center justify-center border border-${itemData.color.split('-')[0]}-500/50 shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                    <span class="material-symbols-outlined text-${itemData.color}">${itemData.icon}</span>
+                </div>
+                <span class="text-[8px] font-bold text-gray-300 mt-1 uppercase text-center w-full leading-tight truncate px-1">${itemData.name}</span>
+            `;
+
+                slot.classList.add('border-primary', 'bg-primary/5');
+
+                // Feedback sound/effect simulation
+                slot.classList.add('scale-95');
+                setTimeout(() => slot.classList.remove('scale-95'), 100);
+
+            } catch (e) {
+                console.error("Drop error", e);
+            }
+        }
+
+        // Combine / Crafting logic
+        function combineItems() {
+            const btn = document.getElementById('btn-combine');
+            btn.classList.add('scale-95');
+            setTimeout(() => btn.classList.remove('scale-95'), 100);
+
+            if (!craftSlots[1] && !craftSlots[2]) {
+                showToast('Bancada Vazia', 'Adicione itens na bancada para criar.', 'warning');
+                return;
+            }
+            if (!craftSlots[1] || !craftSlots[2]) {
+                showToast('Falta Ingrediente', 'Você precisa de dois itens para fazer uma combinação.', 'warning');
+                return;
+            }
+
+            const i1 = craftSlots[1].id;
+            const i2 = craftSlots[2].id;
+
+            // Simulating Recipe Checking
+            if ((i1 === 'nerf' && i2 === 'copper') || (i1 === 'copper' && i2 === 'nerf')) {
+                showToast('Sucesso!', 'Torreta Elétrica criada com sucesso.', 'success');
+                clearSlots();
+            } else if ((i1 === 'copper' && i2 === 'string') || (i1 === 'string' && i2 === 'copper')) {
+                showToast('Sucesso!', 'Armadilha de Fios criada com sucesso.', 'success');
+                clearSlots();
+            } else if (i1 === i2) {
+                showToast('Combinação Falida', 'Não é possível combinar dois itens iguais neste momento.', 'error');
+            } else {
+                showToast('Quase lá', 'Esta combinação não resultou em nada... guarde suas peças.', 'warning');
+                clearSlots();
+            }
+        }
+
+        function clearSlots() {
+            [1, 2].forEach(slotNumber => {
+                craftSlots[slotNumber] = null;
+                const slot = document.getElementById(`craft-slot-${slotNumber}`);
+                const iconWrap = document.getElementById(`slot-icon-${slotNumber}`);
+                const content = document.getElementById(`slot-content-${slotNumber}`);
+
+                iconWrap.classList.remove('hidden');
+                content.classList.add('hidden');
+                content.innerHTML = '';
+                slot.classList.remove('border-primary', 'bg-primary/5');
+
+                // Add poof animation
+                slot.classList.add('opacity-50', 'scale-110');
+                setTimeout(() => {
+                    slot.classList.remove('opacity-50', 'scale-110');
+                }, 200);
+            });
+        }
+
+        // Map Interactions
+        function interactMap(name, desc) {
+            showToast('Observação', desc, 'info');
+        }
+
+        function attackEnemy(el, name) {
+            // Visual feedback
+            el.classList.add('scale-75', 'brightness-200');
+            showToast('Ataque!', `Atingiu o ${name} com sucesso!`, 'success');
+
+            // Remove HP visually (the healthbars on enemies)
+            const bar = el.querySelector('div.bg-red-500');
+            if (bar) {
+                let width = parseInt(bar.style.width || bar.classList[bar.classList.length - 1].replace(/[^0-9]/g, ''));
+                if (isNaN(width)) width = 100; // fallback if parsing fails
+                if (width > 0) {
+                    width = Math.max(0, width - 25);
+                    bar.style.width = width + '%';
+                    bar.className = 'bg-red-500 h-full transition-all duration-300';
+                }
+            }
+
+            setTimeout(() => el.classList.remove('scale-75', 'brightness-200'), 150);
+        }
+
+        // Bottom Actions
+        function actionButton(actionName) {
+            showToast('Ação', `Botão ${actionName} pressionado!`, 'info');
+        }
+
+        function recycleAction() {
+            capsCount += 5;
+            const countEl = document.getElementById('caps-count');
+            const iconEl = document.getElementById('caps-icon');
+
+            countEl.innerText = `${capsCount} Tampinhas`;
+            countEl.classList.add('text-green-400');
+            iconEl.classList.add('rotate-180', 'scale-125');
+
+            showToast('Reciclado', '+5 Tampinhas!', 'success');
+
+            setTimeout(() => {
+                countEl.classList.remove('text-green-400');
+                iconEl.classList.remove('rotate-180', 'scale-125');
+            }, 500);
+        }
+
+    </script>
+</body>
+
+</html>

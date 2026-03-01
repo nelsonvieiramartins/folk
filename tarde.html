@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html class="dark" lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Project Folk: Venda do Seu Zé</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&amp;display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#FFD700", "primary-dark": "#D4AF37",
+                        "background-light": "#FFF8E1",
+                        "background-dark": "#1a1625", "surface-dark": "#2d2438",
+                        "surface-darker": "#15121e",
+                        "accent-blue": "#4fc3f7",
+                        "accent-red": "#ff5252",
+                        "craft-brown": "#8d6e63",
+                    },
+                    fontFamily: {
+                        display: ["Spline Sans", "sans-serif"],
+                        handwritten: ["Permanent Marker", "cursive"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        full: "9999px",
+                    },
+                    backgroundImage: {
+                        'paper-texture': "url('https://www.transparenttextures.com/patterns/notebook.png')",
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Spline Sans', sans-serif;
+        }
+
+        .font-sketch {
+            font-family: 'Permanent Marker', cursive;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #2d2438;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #FFD700;
+            border-radius: 5px;
+            border: 2px solid #2d2438;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+
+        .wiggle-hover:hover {
+            animation: wiggle 0.5s ease-in-out infinite;
+        }
+
+        @keyframes wiggle {
+
+            0%,
+            100% {
+                transform: rotate(-3deg);
+            }
+
+            50% {
+                transform: rotate(3deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-background-dark text-slate-100 overflow-hidden h-screen flex flex-col">
+    <header
+        class="flex items-center justify-between whitespace-nowrap border-b-4 border-dashed border-[#4a3b5c] bg-surface-darker px-6 py-3 shrink-0 z-50 relative">
+        <div class="flex items-center gap-4 text-white">
+            <div
+                class="size-10 flex items-center justify-center rounded-full bg-primary text-background-dark shadow-[0_0_15px_rgba(255,215,0,0.4)] border-2 border-white">
+                <span class="material-symbols-outlined font-bold">toys</span>
+            </div>
+            <h2 class="text-white text-xl font-sketch leading-tight tracking-wider text-primary drop-shadow-md">Project
+                Folk</h2>
+        </div>
+        <div class="absolute left-1/2 -translate-x-1/2 top-2 flex flex-col items-center">
+            <div class="flex items-center gap-0 bg-surface-dark rounded-full p-1 border-2 border-[#4a3b5c] shadow-lg">
+                <a href="code.html"
+                    class="px-4 py-1 rounded-full text-xs font-bold text-gray-500 hover:text-white transition-colors cursor-pointer">MANHÃ</a>
+                <div
+                    class="px-6 py-1.5 rounded-full bg-orange-600 text-primary text-sm font-black border border-primary shadow-[0_0_10px_rgba(234,88,12,0.5)]">
+                    TARDE</div>
+                <div class="px-4 py-1 rounded-full text-xs font-bold text-gray-500">NOITE</div>
+            </div>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Sobrevivência</span>
+                <span class="text-xl font-sketch text-white">TARDE <span class="text-primary">05</span>/20</span>
+            </div>
+            <div class="flex items-center gap-2 bg-[#2d2438] px-3 py-1.5 rounded-lg border border-[#4a3b5c]">
+                <span
+                    class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current">favorite</span>
+                <span
+                    class="material-symbols-outlined text-red-500 drop-shadow-[0_0_5px_rgba(239,68,68,0.8)] fill-current">favorite</span>
+                <span class="material-symbols-outlined text-gray-600">favorite_border</span>
+                <span class="text-xs text-gray-300 ml-1 font-bold">Relíquia</span>
+            </div>
+            <button
+                class="flex items-center justify-center overflow-hidden rounded-xl h-10 w-10 bg-[#4a3b5c] hover:bg-[#5e4b75] text-white transition-colors">
+                <span class="material-symbols-outlined">settings</span>
+            </button>
+        </div>
+    </header>
+    <main class="flex flex-1 overflow-hidden relative">
+        <aside
+            class="w-80 bg-[#251e30] border-r-4 border-[#4a3b5c] flex flex-col z-20 shadow-2xl overflow-hidden bg-[url('https://www.transparenttextures.com/patterns/dark-matter.png')]">
+            <div class="p-4 border-b-2 border-dashed border-[#4a3b5c] bg-[#1f1929]">
+                <h3 class="text-primary text-lg font-sketch uppercase tracking-wider flex items-center gap-2">
+                    <span class="material-symbols-outlined text-white">construction</span>
+                    Oficina &amp; Inventário
+                </h3>
+                <p class="text-gray-400 text-xs mt-1 font-mono">Recursos coletados no quintal</p>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 space-y-4">
+                <div>
+                    <h4 class="text-xs font-bold text-gray-500 uppercase mb-2">Mochila</h4>
+                    <div class="space-y-2">
+                        <div id="item-nerf" draggable="true" ondragstart="drag(event)" data-id="nerf"
+                            data-name="Pistola Nerf" data-icon="water_drop" data-color="orange-500" data-value="20"
+                            class="inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]">
+                            <div
+                                class="w-10 h-10 bg-orange-500/20 rounded flex items-center justify-center border border-orange-500/50 pointer-events-none">
+                                <span class="material-symbols-outlined text-orange-400">water_drop</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-bold text-sm text-gray-200">Pistola Nerf</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x1</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Valor: 20 Tamps</span>
+                            </div>
+                        </div>
+                        <div id="item-copper" draggable="true" ondragstart="drag(event)" data-id="copper"
+                            data-name="Fios de Cobre" data-icon="all_inclusive" data-color="blue-500" data-value="15"
+                            class="inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]">
+                            <div
+                                class="w-10 h-10 bg-blue-500/20 rounded flex items-center justify-center border border-blue-500/50 pointer-events-none">
+                                <span class="material-symbols-outlined text-blue-400">all_inclusive</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-bold text-sm text-gray-200">Fios de Cobre</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x3</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Valor: 15 Tamps</span>
+                            </div>
+                        </div>
+                        <div id="item-string" draggable="true" ondragstart="drag(event)" data-id="string"
+                            data-name="Barbante" data-icon="texture" data-color="yellow-500" data-value="5"
+                            class="inventory-item bg-[#2d2438] p-2 rounded border border-[#4a3b5c] flex gap-3 items-center group cursor-grab active:cursor-grabbing hover:bg-[#382e45]">
+                            <div
+                                class="w-10 h-10 bg-yellow-500/20 rounded flex items-center justify-center border border-yellow-500/50 pointer-events-none">
+                                <span class="material-symbols-outlined text-yellow-400">texture</span>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <span class="font-bold text-sm text-gray-200">Barbante</span>
+                                    <span class="text-xs bg-black/30 px-1 rounded text-gray-400">x5</span>
+                                </div>
+                                <span class="text-[10px] text-gray-500">Valor: 5 Tamps</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <section class="flex-1 relative bg-[#15121e] overflow-hidden flex flex-col items-center justify-center">
+            <div class="absolute inset-0 bg-cover bg-center opacity-30"
+                style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBSPCybzV9Fo0dPR75DM3-zA_obX1LsPzKfDv0TceZoher6-HeEltE5EJGUKH__5QVk6CdApQ22bsOOuQ6kRwbwtGpRrHueIb-KIdB67xa50ReHMpPKXdLfdZPUxS4Ndvjne9l0oKbuIrW_pMDcXSWC1UfR34X5tu5UN_6VHehp9a_-y34qpG8zLJZeWnOcYXU10_U3JSexlXNKBXMh06jgeqVUEmFjzgLQYlUO4NMiBy5_NI_zwy1Y1kxvdcot35lY0wku1ncJWgzr'); filter: sepia(0.5) brightness(0.6);">
+            </div>
+            <svg class="absolute inset-0 w-full h-full pointer-events-none" style="z-index: 1;">
+                <path d="M -50 400 C 200 400, 300 500, 500 500 S 700 500, 800 450" fill="none" stroke="#FFD700"
+                    stroke-dasharray="15 15" stroke-linecap="round" stroke-opacity="0.3" stroke-width="60"></path>
+                <path d="M -50 400 C 200 400, 300 500, 500 500 S 700 500, 800 450" fill="none" stroke="#FFD700"
+                    stroke-dasharray="8 8" stroke-opacity="0.5" stroke-width="4"></path>
+            </svg>
+            <div class="relative z-10 w-full max-w-4xl px-8 flex flex-col items-center">
+                <div class="bg-craft-brown border-4 border-[#5d4037] rounded-xl shadow-2xl p-6 w-full relative">
+                    <div class="absolute -top-12 left-0 right-0 h-12 flex">
+                        <div
+                            class="flex-1 bg-red-600 rounded-t-lg border-x-2 border-t-2 border-[#4a3b5c] transform skew-x-12">
+                        </div>
+                        <div
+                            class="flex-1 bg-white rounded-t-lg border-x-2 border-t-2 border-[#4a3b5c] transform -skew-x-12">
+                        </div>
+                        <div
+                            class="flex-1 bg-red-600 rounded-t-lg border-x-2 border-t-2 border-[#4a3b5c] transform skew-x-12">
+                        </div>
+                        <div
+                            class="flex-1 bg-white rounded-t-lg border-x-2 border-t-2 border-[#4a3b5c] transform -skew-x-12">
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-white font-sketch text-4xl drop-shadow-lg">Venda do Seu Zé</h2>
+                            <p class="text-primary-dark font-bold text-xs uppercase tracking-widest mt-1">Trocas e
+                                Suprimentos</p>
+                        </div>
+                        <div
+                            class="bg-surface-darker border-2 border-primary px-6 py-3 rounded-xl flex items-center gap-3 shadow-[0_0_20px_rgba(255,215,0,0.3)] transform -rotate-2">
+                            <span
+                                class="material-symbols-outlined text-primary text-3xl transition-transform duration-300"
+                                id="caps-icon">toll</span>
+                            <div class="flex flex-col">
+                                <span class="text-white font-sketch text-2xl leading-none transition-colors"
+                                    id="caps-count">145</span>
+                                <span class="text-[10px] text-primary font-bold uppercase">Tampinhas</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-8">
+                        <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c]">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-xs">storefront</span> Itens do Seu Zé
+                            </h4>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div onclick="buyItem('Caixa de Pregos', 30)"
+                                    class="aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-primary cursor-pointer transition-colors group">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 group-hover:text-primary text-2xl">hardware</span>
+                                    <span class="text-[8px] font-bold text-gray-400 mt-1">30 Tamps</span>
+                                </div>
+                                <div onclick="buyItem('Bateria Extra', 80)"
+                                    class="aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-primary cursor-pointer transition-colors group">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 group-hover:text-primary text-2xl">bolt</span>
+                                    <span class="text-[8px] font-bold text-gray-400 mt-1">80 Tamps</span>
+                                </div>
+                                <div onclick="buyItem('Kit Surpresa', 150)"
+                                    class="aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex flex-col items-center justify-center hover:border-primary cursor-pointer transition-colors group">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 group-hover:text-primary text-2xl">featured_play_list</span>
+                                    <span class="text-[8px] font-bold text-gray-400 mt-1">150 Tamps</span>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-center text-gray-500 mt-3 italic">Selecione para comprar</p>
+                        </div>
+                        <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c]">
+                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                                <span class="material-symbols-outlined text-xs">sell</span> Área de Venda
+                            </h4>
+                            <div class="grid grid-cols-2 gap-3" id="trade-bench">
+                                <div id="trade-slot-1"
+                                    class="aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors group relative overflow-hidden"
+                                    ondragover="allowDrop(event)" ondrop="drop(event, 1)">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 group-hover:text-primary text-3xl pointer-events-none"
+                                        id="slot-icon-1">add</span>
+                                    <div id="slot-content-1"
+                                        class="absolute inset-0 flex flex-col items-center justify-center hidden pointer-events-none">
+                                    </div>
+                                </div>
+                                <div id="trade-slot-2"
+                                    class="aspect-square bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors group relative overflow-hidden"
+                                    ondragover="allowDrop(event)" ondrop="drop(event, 2)">
+                                    <span
+                                        class="material-symbols-outlined text-gray-600 group-hover:text-primary text-3xl pointer-events-none"
+                                        id="slot-icon-2">add</span>
+                                    <div id="slot-content-2"
+                                        class="absolute inset-0 flex flex-col items-center justify-center hidden pointer-events-none">
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-[10px] text-center text-gray-500 mt-3 italic">Arraste itens aqui para vender
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 flex items-center gap-6">
+                    <button onclick="actionButton('Craft')"
+                        class="flex flex-col items-center justify-center w-20 h-20 bg-craft-brown hover:bg-[#a1887f] text-white rounded-xl border-b-4 border-[#5d4037] active:border-b-0 active:translate-y-1 transition-all group">
+                        <span
+                            class="material-symbols-outlined text-3xl mb-1 group-hover:rotate-12 transition-transform">handyman</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider">Craft</span>
+                    </button>
+                    <button id="btn-trade" onclick="tradeItems()"
+                        class="relative flex flex-col items-center justify-center w-28 h-28 bg-primary text-background-dark rounded-xl border-b-8 border-primary-dark active:border-b-0 active:translate-y-2 transition-all shadow-[0_0_30px_rgba(255,215,0,0.3)] hover:brightness-110 z-10 wiggle-hover">
+                        <span
+                            class="absolute -top-2 -right-2 bg-orange-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white">TRADE</span>
+                        <span class="material-symbols-outlined text-5xl mb-1">shopping_cart_checkout</span>
+                        <span class="text-xs font-black uppercase tracking-wider font-sketch">ACTION</span>
+                    </button>
+                    <button onclick="actionButton('Recycle')"
+                        class="flex flex-col items-center justify-center w-20 h-20 bg-[#2d2438] hover:bg-green-700/50 text-white rounded-xl border-b-4 border-[#15121e] active:border-b-0 active:translate-y-1 transition-all group border-2 border-green-800/50">
+                        <span
+                            class="material-symbols-outlined text-3xl mb-1 text-green-400 group-hover:scale-110 transition-transform">recycling</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider text-green-200">Recycle</span>
+                    </button>
+                </div>
+            </div>
+            <div class="absolute bottom-6 right-6 flex flex-col gap-2 z-40">
+                <button onclick="actionButton('Pause')"
+                    class="w-10 h-10 rounded-lg bg-[#251e30] hover:bg-[#352b42] flex items-center justify-center border border-[#4a3b5c] text-gray-400 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-sm">pause</span>
+                </button>
+                <button onclick="actionButton('Zoom')"
+                    class="w-10 h-10 rounded-lg bg-[#251e30] hover:bg-[#352b42] flex items-center justify-center border border-[#4a3b5c] text-gray-400 hover:text-white transition-colors">
+                    <span class="material-symbols-outlined text-sm">zoom_out_map</span>
+                </button>
+            </div>
+        </section>
+    </main>
+    <div id="toast-container" class="absolute top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        // System State
+        let tradeSlots = { 1: null, 2: null };
+        let capsCount = 145;
+
+        // Toast Notification System
+        function showToast(title, message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            let bgColor = type === 'success' ? 'bg-green-600/90 border-green-400' :
+                type === 'error' ? 'bg-red-600/90 border-red-400' :
+                    type === 'warning' ? 'bg-yellow-600/90 border-yellow-400' :
+                        'bg-surface-dark border-primary';
+
+            let icon = type === 'success' ? 'check_circle' :
+                type === 'error' ? 'error' :
+                    type === 'warning' ? 'warning' : 'info';
+
+            toast.className = `flex items-center gap-3 p-3 rounded-lg border shadow-lg text-white ${bgColor} transform transition-all duration-300 translate-x-full opacity-0 pointer-events-auto`;
+            toast.innerHTML = `
+            <span class="material-symbols-outlined">${icon}</span>
+            <div class="flex flex-col">
+                <span class="font-bold text-sm">${title}</span>
+                ${message ? `<span class="text-xs text-gray-200">${message}</span>` : ''}
+            </div>
+        `;
+
+            container.appendChild(toast);
+
+            // Animate in
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-x-full', 'opacity-0');
+                toast.classList.add('translate-x-0', 'opacity-100');
+            });
+
+            // Set removing timeout
+            setTimeout(() => {
+                toast.classList.remove('translate-x-0', 'opacity-100');
+                toast.classList.add('translate-x-full', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Drag and Drop Logic
+        function drag(ev) {
+            const target = ev.currentTarget;
+            const itemData = {
+                id: target.getAttribute('data-id'),
+                name: target.getAttribute('data-name'),
+                icon: target.getAttribute('data-icon'),
+                color: target.getAttribute('data-color'),
+                value: parseInt(target.getAttribute('data-value'))
+            };
+            ev.dataTransfer.setData("text", JSON.stringify(itemData));
+            ev.dataTransfer.effectAllowed = "copy";
+
+            target.classList.add('opacity-50');
+        }
+
+        document.querySelectorAll('.inventory-item').forEach(item => {
+            item.addEventListener('dragend', function () {
+                this.classList.remove('opacity-50');
+            });
+        });
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "copy";
+        }
+
+        function drop(ev, slotNumber) {
+            ev.preventDefault();
+            try {
+                const dataStr = ev.dataTransfer.getData("text");
+                if (!dataStr) return;
+                const itemData = JSON.parse(dataStr);
+
+                tradeSlots[slotNumber] = itemData;
+
+                // Update Slot UI
+                const slot = document.getElementById(`trade-slot-${slotNumber}`);
+                const iconWrap = document.getElementById(`slot-icon-${slotNumber}`);
+                const content = document.getElementById(`slot-content-${slotNumber}`);
+
+                iconWrap.classList.add('hidden');
+                content.classList.remove('hidden');
+
+                content.innerHTML = `
+                <div class="w-8 h-8 bg-${itemData.color.split('-')[0]}-500/20 rounded flex items-center justify-center border border-${itemData.color.split('-')[0]}-500/50 shadow-[0_0_10px_rgba(255,255,255,0.1)]">
+                    <span class="material-symbols-outlined text-${itemData.color}">${itemData.icon}</span>
+                </div>
+                <span class="text-[8px] font-bold text-gray-300 mt-1 uppercase text-center w-full leading-tight truncate px-1">${itemData.name}</span>
+                <span class="text-[8px] bg-black/50 px-1 rounded text-primary border border-primary/30 mt-0.5">${itemData.value} Tamps</span>
+            `;
+
+                slot.classList.add('border-primary', 'bg-primary/5');
+                slot.classList.add('scale-95');
+                setTimeout(() => slot.classList.remove('scale-95'), 100);
+
+            } catch (e) {
+                console.error("Drop error", e);
+            }
+        }
+
+        // Trade Logic
+        function updateCaps(amount) {
+            capsCount += amount;
+            const countEl = document.getElementById('caps-count');
+            const iconEl = document.getElementById('caps-icon');
+
+            countEl.innerText = capsCount;
+            countEl.classList.add(amount >= 0 ? 'text-green-400' : 'text-red-400');
+            iconEl.classList.add('rotate-180', 'scale-125');
+
+            setTimeout(() => {
+                countEl.classList.remove('text-green-400', 'text-red-400');
+                iconEl.classList.remove('rotate-180', 'scale-125');
+            }, 500);
+        }
+
+        function tradeItems() {
+            const btn = document.getElementById('btn-trade');
+            btn.classList.add('scale-95');
+            setTimeout(() => btn.classList.remove('scale-95'), 100);
+
+            if (!tradeSlots[1] && !tradeSlots[2]) {
+                showToast('Área Vazia', 'Adicione itens na área de venda.', 'warning');
+                return;
+            }
+
+            let totalValue = 0;
+            let itemsSold = 0;
+
+            if (tradeSlots[1]) { totalValue += tradeSlots[1].value; itemsSold++; }
+            if (tradeSlots[2]) { totalValue += tradeSlots[2].value; itemsSold++; }
+
+            showToast('Venda Concluída!', `Você vendeu ${itemsSold} item(s) por ${totalValue} Tampinhas.`, 'success');
+            updateCaps(totalValue);
+            clearSlots();
+        }
+
+        function clearSlots() {
+            [1, 2].forEach(slotNumber => {
+                tradeSlots[slotNumber] = null;
+                const slot = document.getElementById(`trade-slot-${slotNumber}`);
+                const iconWrap = document.getElementById(`slot-icon-${slotNumber}`);
+                const content = document.getElementById(`slot-content-${slotNumber}`);
+
+                iconWrap.classList.remove('hidden');
+                content.classList.add('hidden');
+                content.innerHTML = '';
+                slot.classList.remove('border-primary', 'bg-primary/5');
+
+                slot.classList.add('opacity-50', 'scale-110');
+                setTimeout(() => {
+                    slot.classList.remove('opacity-50', 'scale-110');
+                }, 200);
+            });
+        }
+
+        // Buy Logic
+        function buyItem(name, cost) {
+            if (capsCount >= cost) {
+                updateCaps(-cost);
+                showToast('Compra Realizada', `Você comprou ${name}!`, 'success');
+            } else {
+                showToast('Tampinhas Insuficientes', `Você precisa de ${cost} Tampinhas para comprar ${name}.`, 'error');
+            }
+        }
+
+        // Other actions
+        function actionButton(actionName) {
+            showToast('Ação', `Botão ${actionName} pressionado!`, 'info');
+        }
+
+    </script>
+</body>
+
+</html>
