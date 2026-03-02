@@ -1321,23 +1321,37 @@
                 const grid = document.getElementById('bestiary-grid');
                 grid.innerHTML = '';
 
-                Object.keys(DB_ENEMIES).forEach(enemyKey => {
-                    const e = DB_ENEMIES[enemyKey];
+                const weaknessLabel = { 'WATER': '💧 Água', 'FIRE': '🔥 Fogo', 'IMPACT': '💥 Impacto' };
+                const weaknessColor = { 'WATER': 'blue', 'FIRE': 'red', 'IMPACT': 'yellow' };
+                const categoryLabel = { 'A': 'Infiltrador', 'B': 'Atropelador', 'C': 'Guardião', 'BOSS': 'BOSS' };
+
+                // Flatten all enemies from arrays + BOSS object
+                const allEnemies = [];
+                ['A', 'B', 'C'].forEach(cat => {
+                    if (Array.isArray(DB_ENEMIES[cat])) DB_ENEMIES[cat].forEach(e => allEnemies.push(e));
+                });
+                allEnemies.push(DB_ENEMIES['BOSS']);
+
+                allEnemies.forEach(e => {
+                    const wColor = weaknessColor[e.weakness] || 'gray';
+                    const wLabel = weaknessLabel[e.weakness] || e.weakness;
+                    const catLabel = categoryLabel[e.category] || '';
                     const html = `
                         <div class="bg-black/40 rounded-xl overflow-hidden border-2 border-purple-900/50 flex flex-col hover:border-purple-500 transition-colors">
-                            <div class="h-32 bg-[#1a1625] relative flex items-center justify-center p-4">
-                                <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('${e.imgUrl}'); filter: blur(2px);"></div>
-                                <div class="w-20 h-20 rounded-full border-4 border-black shadow-[0_0_20px_rgba(147,51,234,0.3)] overflow-hidden relative z-10 bg-black">
-                                    <img src="${e.imgUrl}" class="w-full h-full object-cover" alt="${e.name}">
+                            <div class="h-28 bg-[#1a1625] relative flex items-center justify-center">
+                                <div class="w-16 h-16 rounded-full border-2 border-${e.color}-500 bg-${e.color}-900/40 flex items-center justify-center shadow-[0_0_15px_currentColor]">
+                                    <span class="material-symbols-outlined text-3xl text-${e.color}-300">${e.icon}</span>
                                 </div>
+                                <span class="absolute top-2 left-2 text-[9px] font-bold uppercase bg-purple-900/80 text-purple-300 px-2 py-0.5 rounded border border-purple-700">${catLabel}</span>
                             </div>
-                            <div class="p-4 flex flex-col gap-2 relative">
-                                <h3 class="text-2xl font-sketch text-purple-300 drop-shadow-md tracking-wider">${e.name}</h3>
-                                <div class="flex gap-2 text-[10px] font-bold uppercase tracking-wider mt-1">
-                                    <span class="bg-red-900/40 text-red-400 px-2 py-1 rounded border border-red-900/50 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">favorite</span> HP Base: ${e.hp}</span>
-                                    <span class="bg-blue-900/40 text-blue-400 px-2 py-1 rounded border border-blue-900/50 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">speed</span> VEL: ${e.speed}</span>
+                            <div class="p-3 flex flex-col gap-1.5">
+                                <h3 class="text-lg font-sketch text-purple-300 tracking-wider leading-tight">${e.name}</h3>
+                                <div class="flex gap-1.5 flex-wrap">
+                                    <span class="bg-red-900/40 text-red-400 px-1.5 py-0.5 rounded text-[9px] font-bold border border-red-900/50">❤ HP: ${e.hp}</span>
+                                    <span class="bg-blue-900/40 text-blue-400 px-1.5 py-0.5 rounded text-[9px] font-bold border border-blue-900/50">⚡ VEL: ${e.speed}</span>
+                                    <span class="bg-${wColor}-900/40 text-${wColor}-400 px-1.5 py-0.5 rounded text-[9px] font-bold border border-${wColor}-900/50">${wLabel}</span>
                                 </div>
-                                <p class="text-xs text-gray-400 mt-2 leading-relaxed italic border-t border-purple-900/30 pt-2">"${e.name === 'Saci' ? 'Ágil e implacável. Gosta de esconder coisas, mas de noite ele não brinca em serviço.' : e.name === 'Cuca' ? 'Lenta porém formidável. Diz a lenda que seu chifre contém magia antiga.' : e.name === 'Curupira' ? 'Protetor da mata. Rápido, furioso e os pés virados enganam quem tenta fugir.' : e.name === 'Mula Sem Cabeça' ? 'Fogo em fúria. Corre enlouquecida destruindo tudo em seu caminho com HP altíssimo.' : 'Criatura folclórica.'}"</p>
+                                <p class="text-[10px] text-gray-400 italic border-t border-purple-900/30 pt-1.5 leading-snug">${e.desc}</p>
                             </div>
                         </div>
                     `;
@@ -1446,8 +1460,10 @@
             },
 
             spawnEnemy: (type, id) => {
-                const data = DB_ENEMIES[type];
-                if (!data) return;
+                const raw = DB_ENEMIES[type];
+                if (!raw) return;
+                // Se for array (categorias A/B/C), sorteia aleatoriamente uma criatura
+                const data = Array.isArray(raw) ? raw[Math.floor(Math.random() * raw.length)] : raw;
 
                 // Create DOM Element
                 const board = document.getElementById('board-container');

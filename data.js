@@ -68,11 +68,35 @@ const DB_RECIPES = [
 ];
 
 const DB_ENEMIES = {
-    'A': { id: 1, name: 'Saci', hp: 1, speed: 8, icon: 'do_not_step', color: 'red', desc: 'Ágil. Infiltrador.', weakness: 'WATER' },
-    'B': { id: 2, name: 'Cuca Jr.', hp: 4, speed: 5, icon: 'sentiment_neutral', color: 'green', desc: 'Atropelador.', weakness: 'WATER' },
-    'C': { id: 3, name: 'Boitatá', hp: 10, speed: 3, icon: 'visibility', color: 'purple', desc: 'Guardião.', weakness: 'WATER' },
-    'BOSS': { id: 4, name: 'Mapinguari', hp: 60, speed: 2, icon: 'smart_toy', color: 'yellow', desc: 'O Guardião Final. Imparável.', weakness: 'FIRE' }
+    // CATEGORIA A — Infiltradores (HP: 1, velocidade alta)
+    'A': [
+        { id: 1, name: 'Saci', hp: 1, speed: 8, icon: 'do_not_step', color: 'red', desc: 'Extremamente ágil; pode saltar armadilhas.', weakness: 'WATER', category: 'A' },
+        { id: 2, name: 'Curupira', hp: 1, speed: 7, icon: 'directions_run', color: 'green', desc: 'Pés invertidos; confunde a mira das armas.', weakness: 'IMPACT', category: 'A' },
+        { id: 3, name: 'Caipora', hp: 1, speed: 7, icon: 'cruelty_free', color: 'orange', desc: 'Atrai aliados ao tabuleiro ao ser avistada.', weakness: 'FIRE', category: 'A' },
+        { id: 4, name: 'Pisadeira', hp: 1, speed: 6, icon: 'compress', color: 'gray', desc: 'Causa lentidão nas armas próximas.', weakness: 'FIRE', category: 'A' },
+        { id: 5, name: 'Matinta Perêra', hp: 1, speed: 9, icon: 'nightlife', color: 'purple', desc: 'Ignora terrenos lentos no quintal.', weakness: 'WATER', category: 'A' },
+    ],
+    // CATEGORIA B — Atropeladores (HP: 4, velocidade média)
+    'B': [
+        { id: 6, name: 'Mula sem Cabeça', hp: 4, speed: 5, icon: 'do_not_touch', color: 'orange', desc: 'Ignora a 1ª armadilha de impacto que encontrar.', weakness: 'WATER', category: 'B' },
+        { id: 7, name: 'Lobisomem', hp: 4, speed: 5, icon: 'pets', color: 'gray', desc: 'Ganha bônus de movimento se ferido mas não abatido.', weakness: 'FIRE', category: 'B' },
+        { id: 8, name: 'A Cuca', hp: 4, speed: 4, icon: 'mood_bad', color: 'green', desc: 'Desativa temporariamente uma torreta próxima.', weakness: 'WATER', category: 'B' },
+        { id: 9, name: 'Capelobo', hp: 4, speed: 4, icon: 'shield', color: 'brown', desc: 'Couro resistente que reduz o dano recebido.', weakness: 'FIRE', category: 'B' },
+        { id: 10, name: 'Corpo-Seco', hp: 4, speed: 5, icon: 'sentiment_very_dissatisfied', color: 'slate', desc: 'Ao morrer, bloqueia um tile temporariamente.', weakness: 'IMPACT', category: 'B' },
+    ],
+    // CATEGORIA C — Guardiões (HP: 10, velocidade baixa)
+    'C': [
+        { id: 11, name: 'Boitatá', hp: 10, speed: 3, icon: 'visibility', color: 'purple', desc: 'Imune a ataques de flanco.', weakness: 'WATER', category: 'C' },
+        { id: 12, name: 'Mapinguari', hp: 10, speed: 2, icon: 'fort', color: 'green', desc: 'Exige dano massivo para recuar.', weakness: 'FIRE', category: 'C' },
+        { id: 13, name: 'Cobra Grande', hp: 10, speed: 3, icon: 'cable', color: 'lime', desc: 'Causa pânico, forçando descarte de itens.', weakness: 'IMPACT', category: 'C' },
+        { id: 14, name: 'Boto Cor-de-Rosa', hp: 10, speed: 4, icon: 'water', color: 'pink', desc: 'Pode encantar armas, fazendo-as falhar.', weakness: 'IMPACT', category: 'C' },
+        { id: 15, name: 'Labatut', hp: 10, speed: 3, icon: 'restaurant', color: 'red', desc: 'Regenera HP ao destruir armadilhas.', weakness: 'IMPACT', category: 'C' },
+    ],
+    // BOSS — Noite 20
+    'BOSS': { id: 16, name: 'Mapinguari Ancião', hp: 60, speed: 2, icon: 'smart_toy', color: 'yellow', desc: 'O Guardião Final. Imparável.', weakness: 'FIRE', category: 'BOSS' }
 };
+
+
 
 const STAGES = {
     1: ['A'],
