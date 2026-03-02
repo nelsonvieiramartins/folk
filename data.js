@@ -45,28 +45,37 @@ const DB_ITEMS = [
 
 
 const DB_RECIPES = [
-    { id: 101, name: 'Sentinela Nerf', req: [16, 7, 1, 4], damage: 2, range: 40, type: 'IMPACT', icon: 'mode_fan', color: 'orange' },
-    { id: 102, name: 'Metralhadora Vulcan', req: [17, 7, 1, 4], damage: 4, range: 40, type: 'IMPACT', icon: 'construction', color: 'yellow' },
-    { id: 103, name: 'Sentinela de Fogo', req: [18, 8, 1, 4], damage: 3, range: 45, type: 'FIRE', icon: 'local_fire_department', color: 'red' },
-    { id: 104, name: 'Canhão de Tênis', req: [19, 9, 1, 5], damage: 5, range: 50, type: 'IMPACT', icon: 'sports_baseball', color: 'gray' },
-    { id: 105, name: 'Mina de Goma', req: [20, 10], damage: 3, range: 10, type: 'IMPACT', icon: 'pest_control', color: 'gray' },
-    { id: 106, name: 'Lançador de Geleca', req: [21, 11, 2, 6], damage: 2, range: 35, type: 'WATER', icon: 'hardware', color: 'green' },
-    { id: 107, name: 'Armadilha de Gude', req: [22, 11, 6], damage: 2, range: 10, type: 'IMPACT', icon: 'scatter_plot', color: 'blue' },
-    { id: 108, name: 'Morteiro de Água', req: [11, 2, 5], damage: 3, range: 35, type: 'WATER', icon: 'opacity', color: 'blue' },
-    { id: 109, name: 'Armadilha Espanador', req: [23, 11, 3, 6], damage: 1, range: 15, type: 'IMPACT', icon: 'cleaning_services', color: 'yellow' },
-    { id: 110, name: 'Teia de Aranha', req: [11, 6], damage: 0, range: 10, type: 'WATER', icon: 'blur_on', color: 'white' }, // Slow
-    { id: 111, name: 'Cobra Mangueira', req: [24, 3, 4], damage: 2, range: 15, type: 'WATER', icon: 'waves', color: 'green' },
-    { id: 112, name: 'Spray de Pimenta', req: [25, 6], damage: 3, range: 20, type: 'FIRE', icon: 'sanitizer', color: 'purple' },
-    { id: 113, name: 'Espantalho', req: [26, 3, 6], damage: 0, range: 25, type: 'IMPACT', icon: 'emoji_people', color: 'orange' }, // Distract
-    { id: 114, name: 'Bambolê de Fogo', req: [27, 3, 6], damage: 4, range: 15, type: 'FIRE', icon: 'data_usage', color: 'red' },
-    { id: 115, name: 'Tapete de Brasas', req: [28, 13, 4], damage: 5, range: 10, type: 'FIRE', icon: 'aspect_ratio', color: 'red' },
-    { id: 116, name: 'Aspersor de Lama', req: [29, 12, 5], damage: 3, range: 25, type: 'WATER', icon: 'shower', color: 'blue' },
-    { id: 117, name: 'Pêndulo de Pneu', req: [30, 3, 6], damage: 6, range: 20, type: 'IMPACT', icon: 'vignette', color: 'gray' },
-    { id: 118, name: 'Gravidade Fogo', req: [14, 6], damage: 4, range: 10, type: 'FIRE', icon: 'view_comfy', color: 'red' },
-    { id: 119, name: 'Besta de Lápis', req: [31, 15, 4], damage: 4, range: 45, type: 'IMPACT', icon: 'ev_station', color: 'yellow' },
-    { id: 120, name: 'Lançador Tênis', req: [32, 3, 5], damage: 4, range: 40, type: 'IMPACT', icon: 'timelapse', color: 'green' },
-    { id: 121, name: 'Armadilha Choque', req: [33, 4], damage: 5, range: 15, type: 'FIRE', icon: 'battery_charging_full', color: 'yellow' }
+    // ===== ARMAS (Torretas — Disparo Automático) =====
+    // cadence = ticks entre disparos (1 tick = 0.1s)
+    { id: 101, name: 'Sentinela Nerf', req: [16, 7, 1, 4], damage: 2, range: 35, cadence: 20, type: 'IMPACT', isTrap: false, icon: 'mode_fan', color: 'orange' },
+    { id: 102, name: 'Metralhadora Vulcan', req: [17, 7, 1, 4], damage: 3, range: 35, cadence: 15, type: 'IMPACT', isTrap: false, icon: 'construction', color: 'yellow' },
+    { id: 103, name: 'Sentinela de Fogo', req: [18, 8, 1, 4], damage: 3, range: 40, cadence: 25, type: 'FIRE', isTrap: false, icon: 'local_fire_department', color: 'red' },
+    { id: 104, name: 'Canhão de Tênis', req: [19, 9, 1, 5], damage: 6, range: 55, cadence: 50, type: 'IMPACT', isTrap: false, icon: 'sports_baseball', color: 'gray' },
+    { id: 106, name: 'Lançador de Geleca', req: [21, 11, 2, 6], damage: 2, range: 35, cadence: 30, type: 'WATER', isTrap: false, icon: 'hardware', color: 'green' },
+    { id: 108, name: 'Morteiro de Água', req: [11, 12, 2, 5], damage: 3, range: 25, cadence: 35, type: 'WATER', isTrap: false, icon: 'opacity', color: 'blue' }, // + Balde (12) → custo 12c
+    { id: 111, name: 'Cobra Mangueira', req: [24, 3, 4], damage: 2, range: 20, cadence: 20, type: 'WATER', isTrap: false, icon: 'waves', color: 'green' },
+    { id: 112, name: 'Spray de Pimenta', req: [25, 6], damage: 2, range: 25, cadence: 20, type: 'FIRE', isTrap: false, icon: 'sanitizer', color: 'purple' },
+    { id: 116, name: 'Aspersor de Lama', req: [29, 12, 5], damage: 2, range: 30, cadence: 15, type: 'WATER', isTrap: false, icon: 'shower', color: 'blue' },
+    { id: 117, name: 'Pêndulo de Pneu', req: [30, 11, 3, 6], damage: 6, range: 20, cadence: 60, type: 'IMPACT', isTrap: false, icon: 'vignette', color: 'gray' }, // + Estacas (11) → custo 18c
+    { id: 119, name: 'Besta de Lápis', req: [31, 15, 4], damage: 5, range: 50, cadence: 40, type: 'IMPACT', isTrap: false, icon: 'ev_station', color: 'yellow' },
+    { id: 120, name: 'Lançador Tênis', req: [32, 3, 5], damage: 3, range: 25, cadence: 30, type: 'IMPACT', isTrap: false, icon: 'timelapse', color: 'green' }, // range 40→25
+    { id: 121, name: 'Armad. Choque', req: [33, 4], damage: 4, range: 20, cadence: 25, type: 'FIRE', isTrap: false, icon: 'battery_charging_full', color: 'yellow' },
+
+    // ===== ARMADILHAS (Ativação por Contato — Usos Limitados) =====
+    // uses: -1 = permanente (destruída por 3 inimigos C) | uses: N = N ativações
+    // effect: 'SLOW' | 'FREEZE' | 'DOT' | 'DAMAGE_AOE' | 'PUSHBACK'
+    { id: 105, name: 'Mina de Goma', req: [20, 10], damage: 3, range: 15, cadence: 0, type: 'IMPACT', isTrap: true, uses: 1, effect: 'DAMAGE_AOE', effectValue: 3, effectDuration: 0, icon: 'pest_control', color: 'gray' },
+    { id: 107, name: 'Armad. de Gude', req: [22, 11, 6], damage: 1, range: 10, cadence: 0, type: 'IMPACT', isTrap: true, uses: 4, effect: 'SLOW', effectValue: 0.6, effectDuration: 8, icon: 'scatter_plot', color: 'blue' },
+    { id: 109, name: 'Armad. Espanador', req: [23, 11, 3, 6], damage: 1, range: 15, cadence: 0, type: 'IMPACT', isTrap: true, uses: 2, effect: 'PUSHBACK', effectValue: 1, effectDuration: 0, icon: 'cleaning_services', color: 'yellow' },
+    { id: 110, name: 'Teia de Aranha', req: [11, 6], damage: 0, range: 10, cadence: 0, type: 'WATER', isTrap: true, uses: -1, effect: 'SLOW', effectValue: 0.4, effectDuration: 20, icon: 'blur_on', color: 'white' },
+    { id: 113, name: 'Espantalho', req: [26, 3, 6], damage: 0, range: 25, cadence: 0, type: 'IMPACT', isTrap: true, uses: -1, effect: 'FREEZE', effectValue: 0, effectDuration: 4, icon: 'emoji_people', color: 'orange' },
+    { id: 114, name: 'Bambolê de Fogo', req: [27, 3, 6], damage: 3, range: 15, cadence: 0, type: 'FIRE', isTrap: true, uses: 2, effect: 'DOT', effectValue: 1, effectDuration: 3, icon: 'data_usage', color: 'red' },
+    { id: 115, name: 'Tapete de Brasas', req: [28, 13, 4], damage: 1, range: 10, cadence: 0, type: 'FIRE', isTrap: true, uses: 12, effect: 'DOT', effectValue: 1, effectDuration: 1, icon: 'aspect_ratio', color: 'red' },
+    { id: 118, name: 'Gravidade Fogo', req: [14, 6], damage: 2, range: 10, cadence: 0, type: 'FIRE', isTrap: true, uses: 3, effect: 'FREEZE', effectValue: 0, effectDuration: 3, icon: 'view_comfy', color: 'red' },
 ];
+
+
+
 
 const DB_ENEMIES = {
     // CATEGORIA A — Infiltradores (HP: 1, velocidade alta)

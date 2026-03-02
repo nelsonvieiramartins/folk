@@ -1001,7 +1001,13 @@
                     color: recipe.color,
                     damage: recipe.damage,
                     range: recipe.range,
-                    type: recipe.type
+                    type: recipe.type,
+                    isTrap: recipe.isTrap || false,
+                    cadence: recipe.cadence || 45,
+                    uses: recipe.uses !== undefined ? recipe.uses : null,
+                    effect: recipe.effect || null,
+                    effectValue: recipe.effectValue || 0,
+                    effectDuration: recipe.effectDuration || 0
                 });
 
                 showToast('Arma Construída!', `${recipe.name} foi adicionada aos Prontos para Uso!`, 'success');
@@ -1100,14 +1106,21 @@
                     id: cItem.id,
                     x: openSlot.x,
                     y: openSlot.y,
-                    range: cItem.range, // 1 grid base
+                    range: cItem.range,
                     damage: cItem.damage,
                     name: cItem.name,
                     cooldown: 0,
                     icon: cItem.icon,
                     color: cItem.color,
                     type: cItem.type,
-                    slotId: openSlot.id
+                    slotId: openSlot.id,
+                    isTrap: cItem.isTrap || false,
+                    cadence: cItem.cadence || 45,
+                    uses: cItem.uses !== undefined ? cItem.uses : null,
+                    effect: cItem.effect || null,
+                    effectValue: cItem.effectValue || 0,
+                    effectDuration: cItem.effectDuration || 0,
+                    triggeredEnemies: [] // track which enemy IDs have been triggered
                 });
 
                 // Remove from tray
@@ -1496,8 +1509,13 @@
                     maxHp: data.hp,
                     x: startX,
                     y: startY,
-                    wpIndex: 1, // Moving towards waypoint index 1
+                    wpIndex: 1,
                     speed: data.speed,
+                    baseSpeed: data.speed,   // velocidade base para restaurar após slow
+                    slowTicks: 0,            // ticks restantes de lentidão (-60% speed)
+                    frozenTicks: 0,          // ticks restantes de paralisia (speed=0)
+                    burnTicks: 0,            // ticks restantes de queimadura (1 dano/tick)
+                    triggeredTraps: [],      // IDs das armadilhas que já ativaram neste inimigo
                     el: el
                 });
             },
@@ -1542,31 +1560,23 @@
                 const bWidth = board.clientWidth || window.innerWidth;
                 const bHeight = board.clientHeight || window.innerHeight;
 
-                // 1. Tower Cooldowns and Attacking
-                GameState.towers.forEach(t => {
+                // 1. Torre Cooldowns e Ataques (armas normais - isTrap: false)
+                GameState.towers.filter(t => !t.isTrap).forEach(t => {
                     if (t.cooldown > 0) t.cooldown--;
 
                     if (t.cooldown === 0) {
-                        // Find target in range using actual pixel distance to match exactly 45px radial layout
                         const target = GameState.activeEnemies.find(e => {
                             if (e.hp <= 0) return false;
                             const dxPx = (e.x - t.x) * bWidth / 100;
                             const dyPx = (e.y - t.y) * bHeight / 100;
-                            const distPx = Math.sqrt(dxPx * dxPx + dyPx * dyPx);
-
-                            // 45px visible radius padding from the edge of a 40px object is exactly 65px from the absolute center geometry. (+15px request bump) -> +28px for border trigger
-                            return distPx <= (65 + 28);
+                            return Math.sqrt(dxPx * dxPx + dyPx * dyPx) <= (65 + 28);
                         });
 
                         if (target) {
-                            // FIRE!
                             target.hp -= t.damage;
-                            t.cooldown = 45; // 4.5 seconds cooldown. Slow enough that two enemies stringed together will slip by without combo traps.
+                            t.cooldown = t.cadence || 45;
 
-                            // Visual Shot Line
                             CombatSystem.drawLaser(t.x, t.y, target.x, target.y, t.color);
-
-                            // Visual UI Damage
                             target.el.classList.add('brightness-200', 'scale-90');
                             setTimeout(() => target.el.classList.remove('brightness-200', 'scale-90'), 150);
 
@@ -1576,28 +1586,109 @@
                     }
                 });
 
-                // 2. Enemy Movement & Death
+                // 2. Ativação de Armadilhas (isTrap: true — ativam por contato)
+                GameState.towers.filter(t => t.isTrap && (t.uses === null || t.uses === -1 || t.uses > 0)).forEach(trap => {
+                    const triggerRadiusPx = (trap.range / 100) * Math.min(bWidth, bHeight) * 1.5;
+
+                    const enemiesInRange = GameState.activeEnemies.filter(e => {
+                        if (e.hp <= 0) return false;
+                        const dxPx = (e.x - trap.x) * bWidth / 100;
+                        const dyPx = (e.y - trap.y) * bHeight / 100;
+                        return Math.sqrt(dxPx * dxPx + dyPx * dyPx) <= triggerRadiusPx;
+                    });
+
+                    if (enemiesInRange.length === 0) return;
+
+                    if (trap.effect === 'DAMAGE_AOE') {
+                        // AoE: ativa uma vez, afeta todos no raio
+                        if (trap.uses > 0) {
+                            enemiesInRange.forEach(e => {
+                                e.hp -= trap.damage;
+                                const hpBar = e.el.querySelector(`#hp-${e.sysId}`);
+                                if (hpBar) hpBar.style.width = Math.max(0, (e.hp / e.maxHp) * 100) + '%';
+                                e.el.classList.add('brightness-200', 'scale-75');
+                                setTimeout(() => e.el.classList.remove('brightness-200', 'scale-75'), 200);
+                            });
+                            trap.uses = 0; // explodiu
+                        }
+                    } else {
+                        // Efeitos individuais: verifica cada inimigo separadamente
+                        enemiesInRange.forEach(e => {
+                            const alreadyTriggered = e.triggeredTraps.includes(trap.id);
+                            if (alreadyTriggered) return;
+
+                            // Dano individual
+                            if (trap.damage > 0) {
+                                e.hp -= trap.damage;
+                                const hpBar = e.el.querySelector(`#hp-${e.sysId}`);
+                                if (hpBar) hpBar.style.width = Math.max(0, (e.hp / e.maxHp) * 100) + '%';
+                            }
+
+                            // Aplicar efeito
+                            if (trap.effect === 'SLOW') {
+                                e.slowTicks = Math.max(e.slowTicks, trap.effectDuration || 20);
+                            } else if (trap.effect === 'FREEZE') {
+                                e.frozenTicks = Math.max(e.frozenTicks, trap.effectDuration || 4);
+                            } else if (trap.effect === 'DOT') {
+                                e.burnTicks = Math.max(e.burnTicks, trap.effectDuration || 3);
+                            } else if (trap.effect === 'PUSHBACK') {
+                                e.wpIndex = Math.max(0, e.wpIndex - 1);
+                                e.triggeredTraps = []; // reset para passar pelo mapa de novo
+                            }
+
+                            // Marcar inimigo como ativado por esta armadilha
+                            e.triggeredTraps.push(trap.id);
+
+                            // Decrementar usos (se não for permanente)
+                            if (trap.uses !== null && trap.uses !== -1 && trap.uses > 0) {
+                                trap.uses--;
+                            }
+                        });
+                    }
+                });
+
+                // 3. Movimento & Morte dos Inimigos
                 GameState.activeEnemies.forEach((e, i) => {
                     if (e.hp <= 0) {
-                        // Dead
                         if (e.el && e.el.parentNode) {
                             e.el.classList.add('opacity-0', 'scale-150');
                             setTimeout(() => { if (e.el.parentNode) e.el.parentNode.removeChild(e.el); }, 300);
                         }
                         GameState.activeEnemies.splice(i, 1);
-                        return; // continue
+                        return;
                     }
 
                     enemiesAlive++;
 
-                    // Pathfinding routing logic
+                    // Processar DoT (queimadura — 1 dano por tick)
+                    if (e.burnTicks > 0) {
+                        e.burnTicks--;
+                        e.hp -= 1;
+                        const hpBar = e.el.querySelector(`#hp-${e.sysId}`);
+                        if (hpBar) hpBar.style.width = Math.max(0, (e.hp / e.maxHp) * 100) + '%';
+                        if (e.hp <= 0) return; // morte por DoT
+                    }
+
+                    // Processar Paralisia — pular movimento
+                    if (e.frozenTicks > 0) {
+                        e.frozenTicks--;
+                        e.el.classList.add('opacity-50');
+                        setTimeout(() => e.el.classList.remove('opacity-50'), 90);
+                        return; // inimigo parado, não se move
+                    }
+
+                    // Calcular velocidade efetiva (com ou sem lentidão)
+                    const effectiveSpeed = e.slowTicks > 0 ? e.baseSpeed * 0.4 : e.baseSpeed;
+                    if (e.slowTicks > 0) e.slowTicks--;
+
+                    // Pathfinding por waypoints
                     const targetWP = CombatSystem.waypoints[e.wpIndex];
                     if (!targetWP) return;
 
                     const dx = targetWP.x - e.x;
                     const dy = targetWP.y - e.y;
                     const dist = Math.sqrt(dx * dx + dy * dy);
-                    const step = e.speed * 0.1; // tick scaling
+                    const step = effectiveSpeed * 0.1;
 
                     if (dist < step) {
                         // Reached Waypoint
