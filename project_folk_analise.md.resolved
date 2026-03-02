@@ -1,0 +1,225 @@
+# 🎮 Project Folk: O Despertar das Lendas
+## Análise Completa de Game Design — Relatório do Designer
+
+---
+
+## 📋 ESTADO ATUAL DO JOGO
+
+### 🔄 Loop Principal (3 Fases por Noite)
+| Fase | O que acontece | Limitações implementadas |
+|------|----------------|--------------------------|
+| **Manhã** | Depósito gratuito (itens FREE) + compras de 1 moeda | Máx. 2 compras por manhã |
+| **Tarde** | Loja do Seu Zé (itens SUPPORT/ESSENTIAL) + Crafting + Venda | 1 venda por tarde (2 slots) |
+| **Noite** | Invasão automática — torres atacam inimigos | Botão LUTAR inicia o combate |
+
+### 💰 Economia de Moedas
+| Fonte | Valor |
+|---|---|
+| Sobrevivência de 1 noite | +20 moedas |
+| Venda de item grátis (FREE) | 1–2 moedas |
+| Venda de item 1 moeda | 1–2 moedas |
+| Compra grátis (FREE) | 0 moedas |
+| Compra item básico | 1 moeda |
+| Compra item SUPPORT | 5–20 moedas |
+| Compra item ESSENTIAL | 10–20 moedas |
+| Saldo inicial | 100 moedas |
+
+### 🗝️ Inventário e Mochila
+- **Capacidade:** 8 itens totais (1 por tipo de item)
+- **Slots de trap:** 27 posições no mapa (6 esquerda, 6 direita, 3 baixo, 12 internos)
+
+### ⚔️ Receitas e Armas (21 receitas totais)
+
+| Tipo | Qtd | Exemplos | Damage | Range |
+|------|-----|----------|--------|-------|
+| IMPACT | 12 | Sentinela Nerf, Canhão de Tênis, Pêndulo de Pneu | 2–6 | 10–50 |
+| FIRE | 6 | Sentinela de Fogo, Bambolê de Fogo, Tapete de Brasas | 3–5 | 10–20 |
+| WATER | 4 | Morteiro de Água, Cobra Mangueira, Aspersor de Lama | 2–3 | 15–35 |
+| SPECIAL | 2 | Teia de Aranha (slow), Espantalho (distract) | 0 | 10–25 |
+
+**Arma mais forte:** Pêndulo de Pneu (damage 6, range 20 — IMPACT)
+**Arma mais cara para craftear:** Canhão de Tênis (4 ingredientes, inclui ESSENTIAL 19 moedas + SUPPORT 20 moedas)
+
+### 👾 Inimigos Implementados no DB (3 no código, 15 nas regras)
+
+| Código | Nome | HP | Velocidade | Fraqueza |
+|--------|------|----|-----------|----------|
+| A | Saci | 1 | 8 | Água |
+| B | Cuca Jr. | 4 | 5 | Água |
+| C | Boitatá | 10 | 3 | Água |
+
+> ⚠️ **Gap crítico:** Os 3 inimigos ativos têm a mesma fraqueza (ÁGUA), tornando todas as receitas FIRE e IMPACT subótimas.
+
+### 📅 Progressão de Noites (Implementadas: 10 de 20)
+
+| Noite | Composição | HP Total |
+|-------|-----------|---------|
+| 1 | 1A | 1 |
+| 2 | 2A | 2 |
+| 3 | 3A | 3 |
+| 4 | 1A, 1B | 5 |
+| 5 | 2A, 1B | 6 |
+| 6 | 3A, 1B | 7 |
+| 7 | 2A, 2B | 10 |
+| 8 | 3A, 2B | 11 |
+| 9 | 3A, 3B | 15 |
+| 10 | 1A, 1B, 1C | 15 |
+
+---
+
+## 🚨 PROBLEMAS IDENTIFICADOS
+
+### 1. Problema Econômico — Inflação de Saldo
+> O jogador começa com **100 moedas** e ganha **+20 por noite**. Os inimigos ESSENTIALS custam no máximo 20 moedas. Isso cria uma **inflação irreversível**: após 5 noites, o jogador tem dinheiro sobrando sem poder gastá-lo eficientemente.
+
+**Impacto:** O jogo perde tensão econômica rapidamente. O risco de "não ter recursos" desaparece.
+
+### 2. Fraqueza Única nos 3 Inimigos Ativos
+> Saci (A), Cuca Jr. (B) e Boitatá (C) têm todos fraqueza em ÁGUA. Isso torna 12 das 21 receitas (IMPACT + FIRE) subótimas para o meta-game atual.
+
+**Impacto:** O jogador racional sempre escolherá receitas WATER, tornando 57% do conteúdo de crafting decorativo.
+
+### 3. Capacidade de Inventário vs. Receitas Complexas
+> Capacidade máxima da mochila: **8 itens**. A receita mais complexa usa **4 ingredientes**. Um jogador querendo craftear 2 armas ao mesmo tempo precisa de até **8 slots**, deixando zero espaço para itens de segurança ou venda.
+
+**Impacto:** Gargalo de inventário frustrante sem comunicação visual de planejamento.
+
+### 4. Cadência de Fogo (Cooldown) Não Diferenciada
+> Todas as torres têm o mesmo sistema de cooldown no código (`cooldown: 0` por padrão). Não há diferenciação entre uma Mina (armadilha) e uma Metralhadora Vulcan (torreta contínua).
+
+**Impacto:** Receitas de alto custo não se justificam estrategicamente vs. receitas baratas.
+
+### 5. Progressão de Noites Incompleta (Noites 11–20 sem dados)
+> O STAGES object vai só até a noite 10. As noites 11–20 definidas nas regras oficiais (até 3C + BOSS) não estão implementadas.
+
+**Impacto:** O jogo termina na Noite 10 sem escalada de dificuldade.
+
+### 6. Sistema de Venda Limitado (1x por tarde)
+> O jogador só pode vender 1 vez por tarde, com 2 slots. Isso cria uma restrição que pode punir decisões de crafting ruins sem oferecer uma saída.
+
+**Impacto:** Punição excessiva por erros de planejamento de inventário.
+
+### 7. Saldo Inicial Excessivo (100 moedas)
+> Com 100 moedas de início e itens mais caros custando 20 moedas, o jogador pode comprar 5 itens Essenciais logo na Noite 1 e craftear múltiplas armas antes de qualquer inimigo aparecer.
+
+**Impacto:** As primeiras noites se tornam triviais e o sistema de progressão perde sentido.
+
+---
+
+## ✅ SUGESTÕES DE MELHORIA (Priorizadas)
+
+### 🔴 CRÍTICO — Implementar Agora
+
+#### 1. Diversificar Fraquezas dos Inimigos no DB
+Distribuir as fraquezas para que IMPACT, FIRE e WATER sejam igualmente necessários:
+
+```js
+// SUGESTÃO: data.js
+'A': { name: 'Saci', hp: 1, speed: 8, weakness: 'WATER' },    // já OK
+'B': { name: 'Curupira', hp: 4, speed: 5, weakness: 'IMPACT'}, // novo: Curupira vulnerable a Impacto
+'C': { name: 'Capelobo', hp: 10, speed: 2, weakness: 'FIRE' }, // novo: Capelobo vulnerable a Fogo
+```
+Isso imediatamente torna todas as 21 receitas estrategicamente relevantes.
+
+#### 2. Reduzir Saldo Inicial para 30 moedas
+O saldo de 100 moedas elimina toda tensão econômica do início do jogo. Com 30 moedas:
+- O jogador pode comprar apenas 1-2 itens iniciais
+- As noites 1-3 (fracas) servem como fase de acúmulo real
+- A recompensa de +20 por noite se torna significativa
+
+#### 3. Completar Noites 11–20 no STAGES
+```js
+// Adicionar ao data.js ou index.html:
+11: ['A', 'A', 'B', 'C'],
+12: ['A', 'A', 'A', 'B', 'C'],
+// ... até noite 20 com BOSS
+```
+
+---
+
+### 🟡 IMPORTANTE — Próxima Sprint
+
+#### 4. Adicionar Campo `cadence` (cadência de disparo) às Receitas
+Diferenciar torretas de armadilhas com um campo de cooldown:
+
+```js
+// Receitas rápidas (metralhadora):
+{ id: 102, name: 'Metralhadora Vulcan', damage: 4, range: 40, cadence: 1 /* dispara todo tick */ }
+
+// Receitas lentas (canhão):
+{ id: 104, name: 'Canhão de Tênis', damage: 5, range: 50, cadence: 5 /* dispara a cada 5 ticks */ }
+
+// Armadilhas de ativação única:
+{ id: 105, name: 'Mina de Goma', damage: 3, range: 10, cadence: 0 /* ativa 1 vez */ }
+```
+
+#### 5. Aumentar Capacidade de Inventário para 12 Itens
+Com receitas de 4 ingredientes e necessidade de itens de venda, 8 slots é muito restritivo. 12 slots permite planejamento real sem frustração.
+
+#### 6. Recompensa Escalonada por Noite (não fixa em 20)
+```js
+// Em vez de sempre +20:
+const nightReward = 10 + (GameState.night * 2);
+// Noite 1: +12, Noite 5: +20, Noite 10: +30, Noite 20: +50
+```
+Isso mantém a tensão econômica ao longo de todo o jogo.
+
+#### 7. Permitir 2 Vendas por Tarde (ou venda ilimitada com limite de itens)
+Mudar `hasSoldThisAfternoon` para um contador `salesThisAfternoon < 2` em vez de boolean. Isso dá ao jogador mais flexibilidade sem remover a restrição.
+
+---
+
+### 🟢 MELHORIA DE QUALIDADE — Backlog
+
+#### 8. Indicador Visual de DPS por Receita no Manual de Crafting
+Mostrar o DPS estimado [(damage / cadence)](file:///c:/Users/nelso/OneDrive/_ANTIGRAVITY/projectfolk/index.html#1522-1618) de cada receita na interface do Manual, ajudando o jogador a comparar opções.
+
+#### 9. Resistência Variada por Inimigo (não apenas fraqueza)
+Além da fraqueza (+50% dano), adicionar resistências parciais para criar escolhas táticas:
+```js
+'C': { name: 'Boitatá', hp: 10, weakness: 'WATER', resist: 'FIRE' /* 50% dano reduzido */ }
+```
+
+#### 10. Habilidades de Inimigos no Código (além das regras)
+As regras preveem 15 habilidades únicas (Saci pula armadilhas, Mula sans Cabeça ignora 1ª armadilha, etc.) mas nenhuma está implementada no engine de combate. Esta é a feature de maior impacto para profundidade estratégica.
+
+#### 11. Feedback Visual de Dano nos Inimigos
+Quando um inimigo é atingido, mostrar o valor do dano (+2, +CRIT) em popup flutuante sobre ele, tornando o combate visualmente informativo.
+
+#### 12. Mini-Boss nas Noites Múltiplas de 5 (5, 10, 15, 20)
+Adicionar uma criatura única com HP 20+ e habilidade especial nas noites múltiplas de 5, aumentando o ritmo dramático do jogo.
+
+---
+
+## 📊 RESUMO DE PRIORIZAÇÃO
+
+| # | Melhoria | Impacto | Esforço | Prioridade |
+|---|----------|---------|---------|-----------|
+| 1 | Diversificar fraquezas dos 3 inimigos | 🔴 Alto | 🟢 Baixo | **Imediato** |
+| 2 | Reduzir saldo inicial (100 → 30) | 🔴 Alto | 🟢 Baixo | **Imediato** |
+| 3 | Completar Noites 11–20 no STAGES | 🔴 Alto | 🟡 Médio | **Imediato** |
+| 4 | Campo `cadence` nas receitas | 🟡 Médio | 🟡 Médio | Próxima sprint |
+| 5 | Capacidade inventário 8→12 | 🟡 Médio | 🟢 Baixo | Próxima sprint |
+| 6 | Recompensa escalonada por noite | 🟡 Médio | 🟢 Baixo | Próxima sprint |
+| 7 | 2 vendas por tarde | 🟡 Médio | 🟢 Baixo | Próxima sprint |
+| 8 | DPS no manual de crafting | 🟢 Baixo | 🟡 Médio | Backlog |
+| 9 | Resistências por inimigo | 🟢 Médio | 🟡 Médio | Backlog |
+| 10 | Habilidades de inimigo no engine | 🔴 Alto | 🔴 Alto | Backlog futuro |
+| 11 | Popups de dano flutuante | 🟢 Baixo | 🟡 Médio | Backlog |
+| 12 | Mini-boss nas noites x5 | 🟡 Médio | 🟡 Médio | Backlog |
+
+---
+
+## 🎯 BALANÇO ECONÔMICO REVISADO (Proposto)
+
+| Parâmetro | Atual | Sugerido | Motivo |
+|-----------|-------|----------|--------|
+| Saldo inicial | 100 | 30 | Criar tensão econômica real nas primeiras noites |
+| Recompensa por noite | +20 fixo | +10 + (night×2) | Progressão que acompanha escalada de inimigos |
+| Vendas por tarde | 1 | 2 | Flexibilidade sem trivializar |
+| Capacidade mochila | 8 | 12 | Permitir planejamento multiturno |
+| Limite compras manhã | 2 | 2 (manter) | Está bem calibrado |
+
+---
+
+*Relatório gerado em: 2026-03-01 | Análise baseada em: [data.js](file:///c:/Users/nelso/OneDrive/_ANTIGRAVITY/projectfolk/data.js), [regras_oficiais.md](file:///c:/Users/nelso/OneDrive/_ANTIGRAVITY/projectfolk/regras_oficiais.md), [index.html](file:///c:/Users/nelso/OneDrive/_ANTIGRAVITY/projectfolk/index.html)*

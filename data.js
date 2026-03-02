@@ -70,11 +70,12 @@ const DB_RECIPES = [
 const DB_ENEMIES = {
     'A': { id: 1, name: 'Saci', hp: 1, speed: 8, icon: 'do_not_step', color: 'red', desc: 'Ágil. Infiltrador.', weakness: 'WATER' },
     'B': { id: 2, name: 'Cuca Jr.', hp: 4, speed: 5, icon: 'sentiment_neutral', color: 'green', desc: 'Atropelador.', weakness: 'WATER' },
-    'C': { id: 3, name: 'Boitatá', hp: 10, speed: 3, icon: 'visibility', color: 'purple', desc: 'Guardião.', weakness: 'WATER' }
+    'C': { id: 3, name: 'Boitatá', hp: 10, speed: 3, icon: 'visibility', color: 'purple', desc: 'Guardião.', weakness: 'WATER' },
+    'BOSS': { id: 4, name: 'Mapinguari', hp: 60, speed: 2, icon: 'smart_toy', color: 'yellow', desc: 'O Guardião Final. Imparável.', weakness: 'FIRE' }
 };
 
 const STAGES = {
-    1: ['A'], // Noite 1: 1 Inimigo A
+    1: ['A'],
     2: ['A', 'A'],
     3: ['A', 'A', 'A'],
     4: ['A', 'B'],
@@ -83,5 +84,16 @@ const STAGES = {
     7: ['A', 'A', 'B', 'B'],
     8: ['A', 'A', 'A', 'B', 'B'],
     9: ['A', 'A', 'A', 'B', 'B', 'B'],
-    10: ['A', 'B', 'C']
+    10: ['A', 'B', 'C'],
+    11: ['A', 'A', 'B', 'C'],
+    12: ['A', 'A', 'A', 'B', 'C'],
+    13: ['A', 'A', 'B', 'B', 'C'],
+    14: ['A', 'A', 'A', 'B', 'B', 'C'],
+    15: ['A', 'A', 'A', 'B', 'B', 'B', 'C'],
+    16: ['A', 'A', 'B', 'B', 'C', 'C'],
+    17: ['A', 'A', 'A', 'B', 'B', 'C', 'C'],
+    18: ['A', 'A', 'A', 'B', 'B', 'B', 'C', 'C'],
+    19: ['A', 'A', 'A', 'B', 'B', 'B', 'C', 'C', 'C'],
+    20: ['BOSS']
 };
+
