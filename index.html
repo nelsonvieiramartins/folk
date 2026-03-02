@@ -290,109 +290,95 @@
             <aside id="store-panel"
                 class="w-[400px] shrink-0 bg-[#15121e] flex flex-col relative overflow-hidden z-10 border-l-4 border-dashed border-[#4a3b5c]">
 
-                <!-- Placeholder for Night -->
-                <div id="store-night"
-                    class="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-50 z-0 hidden">
-                    <span class="material-symbols-outlined text-6xl text-gray-700 mb-4">nights_stay</span>
-                    <p class="text-gray-500 font-sketch text-lg text-center">Fase da Noite<br><span
-                            class="text-xs font-sans">Loja fechada. Sobreviva!</span></p>
-                </div>
-
-                <!-- Morning Store (Depósito) -->
-                <div id="store-morning"
-                    class="absolute inset-0 flex flex-col z-10 bg-surface-darker transition-opacity duration-300">
-                    <div
-                        class="bg-blue-900/40 p-4 border-b-2 border-[#4a3b5c] flex justify-between items-center shrink-0">
-                        <h2 class="text-2xl font-sketch text-white">Depósito de Peças</h2>
-                        <span class="material-symbols-outlined text-blue-400">inventory_2</span>
+                <!-- Night / Upgrade Panel -->
+                <div id="store-night" class="absolute inset-0 flex flex-col z-0 hidden overflow-hidden">
+                    <div id="upgrade-default" class="flex-1 flex flex-col items-center justify-center p-8 opacity-50">
+                        <span class="material-symbols-outlined text-6xl text-gray-700 mb-4">nights_stay</span>
+                        <p class="text-gray-500 font-sketch text-lg text-center">Fase da Noite<br>
+                            <span class="text-xs font-sans">Clique em uma arma instalada para fazer upgrade.</span>
+                        </p>
                     </div>
-                    <div class="p-6 flex-1 overflow-y-auto">
-                        <p class="text-gray-400 text-sm mb-4">Itens básicos para começar o dia (Custo: 1 Moeda ou
-                            Grátis).</p>
-                        <div class="grid grid-cols-2 gap-4" id="store-items-grid">
-                            <!-- Populated via JS -->
-                        </div>
+                    <div id="upgrade-panel" class="hidden flex-col overflow-y-auto flex-1">
                     </div>
                 </div>
+    </div>
+    </div>
 
-                <!-- Afternoon Store (Seu Zé) -->
-                <div id="store-afternoon"
-                    class="absolute inset-0 flex flex-col z-10 bg-craft-brown hidden transition-opacity duration-300">
-                    <div
-                        class="bg-[#5d4037] p-4 border-b-4 border-[#3e2723] flex justify-between items-center shrink-0">
-                        <h2 class="text-2xl font-sketch text-white drop-shadow-lg">Venda do Seu Zé</h2>
-                        <p class="text-primary font-bold text-[10px] uppercase mt-1">Negocie Recursos.</p>
+    <!-- Afternoon Store (Seu Zé) -->
+    <div id="store-afternoon"
+        class="absolute inset-0 flex flex-col z-10 bg-craft-brown hidden transition-opacity duration-300">
+        <div class="bg-[#5d4037] p-4 border-b-4 border-[#3e2723] flex justify-between items-center shrink-0">
+            <h2 class="text-2xl font-sketch text-white drop-shadow-lg">Venda do Seu Zé</h2>
+            <p class="text-primary font-bold text-[10px] uppercase mt-1">Negocie Recursos.</p>
+        </div>
+        <div class="p-4 flex-1 overflow-y-auto flex flex-col gap-4">
+            <!-- Buy block -->
+            <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c]">
+                <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-xs">storefront</span> Comprar
+                </h4>
+                <div class="grid grid-cols-2 gap-3" id="trade-buy-grid">
+                    <!-- Populated via JS -->
+                </div>
+            </div>
+            <!-- Sell block -->
+            <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c] flex flex-col">
+                <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
+                    <span class="material-symbols-outlined text-xs">sell</span> Vender
+                </h4>
+                <div class="flex gap-3 justify-center" id="trade-bench">
+                    <div id="trade-slot-1" onclick="gameAPI.openSellSelector(1)"
+                        class="w-16 h-16 bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors relative">
+                        <span class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>
                     </div>
-                    <div class="p-4 flex-1 overflow-y-auto flex flex-col gap-4">
-                        <!-- Buy block -->
-                        <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c]">
-                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-xs">storefront</span> Comprar
-                            </h4>
-                            <div class="grid grid-cols-2 gap-3" id="trade-buy-grid">
-                                <!-- Populated via JS -->
-                            </div>
-                        </div>
-                        <!-- Sell block -->
-                        <div class="bg-surface-darker/50 rounded-lg p-4 border border-[#4a3b5c] flex flex-col">
-                            <h4 class="text-xs font-bold text-gray-400 uppercase mb-3 flex items-center gap-2">
-                                <span class="material-symbols-outlined text-xs">sell</span> Vender
-                            </h4>
-                            <div class="flex gap-3 justify-center" id="trade-bench">
-                                <div id="trade-slot-1" onclick="gameAPI.openSellSelector(1)"
-                                    class="w-16 h-16 bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors relative">
-                                    <span
-                                        class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>
-                                </div>
-                                <div id="trade-slot-2" onclick="gameAPI.openSellSelector(2)"
-                                    class="w-16 h-16 bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors relative">
-                                    <span
-                                        class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>
-                                </div>
-                            </div>
-                            <button id="btn-execute-trade" onclick="gameAPI.executeTrade()"
-                                class="w-full mt-4 bg-primary text-black font-sketch text-md py-2 rounded-xl active:translate-y-1 transition-transform">FECHAR
-                                NEGÓCIO</button>
-                        </div>
+                    <div id="trade-slot-2" onclick="gameAPI.openSellSelector(2)"
+                        class="w-16 h-16 bg-[#1a1625] rounded-lg border-2 border-dashed border-gray-600 flex items-center justify-center hover:border-primary cursor-pointer transition-colors relative">
+                        <span class="material-symbols-outlined text-gray-600 text-2xl pointer-events-none">add</span>
                     </div>
                 </div>
-            </aside>
+                <button id="btn-execute-trade" onclick="gameAPI.executeTrade()"
+                    class="w-full mt-4 bg-primary text-black font-sketch text-md py-2 rounded-xl active:translate-y-1 transition-transform">FECHAR
+                    NEGÓCIO</button>
+            </div>
+        </div>
+    </div>
+    </aside>
 
-            <!-- SLIDING CRAFT MANUAL -->
-            <aside id="craft-panel-container"
-                class="absolute top-0 right-0 h-full w-[400px] bg-[#1f1929] border-l-4 border-dashed border-[#4a3b5c] shadow-[-20px_0_50px_rgba(0,0,0,0.8)] z-40 transform translate-x-full transition-transform duration-500 flex flex-col">
+    <!-- SLIDING CRAFT MANUAL -->
+    <aside id="craft-panel-container"
+        class="absolute top-0 right-0 h-full w-[400px] bg-[#1f1929] border-l-4 border-dashed border-[#4a3b5c] shadow-[-20px_0_50px_rgba(0,0,0,0.8)] z-40 transform translate-x-full transition-transform duration-500 flex flex-col">
 
-                <!-- Open/Close Tab -->
-                <button
-                    onclick="document.getElementById('craft-panel-container').classList.toggle('translate-x-full'); gameAPI.renderCraftBook();"
-                    class="absolute top-1/2 -left-12 -translate-y-1/2 bg-[#1f1929] border-y-4 border-l-4 border-[#4a3b5c] border-r-0 rounded-l-2xl p-2 pb-6 pt-6 flex flex-col items-center justify-center text-green-400 hover:text-green-300 transition-colors shadow-[-10px_0_15px_rgba(0,0,0,0.5)] cursor-pointer group">
-                    <span
-                        class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform font-bold">menu_book</span>
-                    <span class="text-[8px] font-bold uppercase tracking-widest"
-                        style="writing-mode: vertical-rl; transform: rotate(180deg);">MANUAL</span>
-                </button>
+        <!-- Open/Close Tab -->
+        <button
+            onclick="document.getElementById('craft-panel-container').classList.toggle('translate-x-full'); gameAPI.renderCraftBook();"
+            class="absolute top-1/2 -left-12 -translate-y-1/2 bg-[#1f1929] border-y-4 border-l-4 border-[#4a3b5c] border-r-0 rounded-l-2xl p-2 pb-6 pt-6 flex flex-col items-center justify-center text-green-400 hover:text-green-300 transition-colors shadow-[-10px_0_15px_rgba(0,0,0,0.5)] cursor-pointer group">
+            <span
+                class="material-symbols-outlined mb-1 group-hover:scale-110 transition-transform font-bold">menu_book</span>
+            <span class="text-[8px] font-bold uppercase tracking-widest"
+                style="writing-mode: vertical-rl; transform: rotate(180deg);">MANUAL</span>
+        </button>
 
-                <!-- Panel Content -->
-                <div
-                    class="p-6 border-b-2 border-dashed border-[#4a3b5c] flex justify-between items-center bg-surface-darker shrink-0">
-                    <div>
-                        <h2 class="text-white font-sketch text-3xl drop-shadow-lg">Criação</h2>
-                        <p class="text-green-400 font-bold text-[10px] uppercase mt-1">Transforme sua sucata em
-                            proteção.</p>
-                    </div>
-                    <button onclick="document.getElementById('craft-panel-container').classList.add('translate-x-full')"
-                        class="bg-black/50 p-2 rounded-full text-white hover:bg-red-500 transition-colors"><span
-                            class="material-symbols-outlined">close</span></button>
-                </div>
-                <div class="p-4 overflow-y-auto w-full h-full flex flex-col gap-4">
-                    <p class="text-gray-400 text-sm">Sempre que a sua mochila possuir as peças necessárias, a Bancada se
-                        acende.</p>
-                    <div id="craft-book-grid" class="flex flex-col gap-4 w-full pb-44">
-                        <!-- Populated via JS -->
-                    </div>
-                </div>
-            </aside>
-        </main>
+        <!-- Panel Content -->
+        <div
+            class="p-6 border-b-2 border-dashed border-[#4a3b5c] flex justify-between items-center bg-surface-darker shrink-0">
+            <div>
+                <h2 class="text-white font-sketch text-3xl drop-shadow-lg">Criação</h2>
+                <p class="text-green-400 font-bold text-[10px] uppercase mt-1">Transforme sua sucata em
+                    proteção.</p>
+            </div>
+            <button onclick="document.getElementById('craft-panel-container').classList.add('translate-x-full')"
+                class="bg-black/50 p-2 rounded-full text-white hover:bg-red-500 transition-colors"><span
+                    class="material-symbols-outlined">close</span></button>
+        </div>
+        <div class="p-4 overflow-y-auto w-full h-full flex flex-col gap-4">
+            <p class="text-gray-400 text-sm">Sempre que a sua mochila possuir as peças necessárias, a Bancada se
+                acende.</p>
+            <div id="craft-book-grid" class="flex flex-col gap-4 w-full pb-44">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </aside>
+    </main>
     </div>
 
     <!-- ==================== START SCREEN ==================== -->
@@ -923,73 +909,35 @@
                 const grid = document.getElementById('craft-book-grid');
                 if (!grid) return;
 
-                let htmlStr = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
-
-                DB_RECIPES.forEach(recipe => {
+                const activeTab = window._craftTab || 'weapons';
+                const weapons = DB_RECIPES.filter(r => !r.isTrap).sort((a, b) => b.damage - a.damage);
+                const traps = DB_RECIPES.filter(r => r.isTrap).sort((a, b) => b.damage - a.damage);
+                const list = activeTab === 'weapons' ? weapons : traps;
+                const TCfg = {
+                    'FIRE': { icon: 'local_fire_department', label: 'Fogo', cls: 'text-orange-400 bg-orange-500/20 border-orange-500/50' },
+                    'WATER': { icon: 'water_drop', label: 'Agua', cls: 'text-blue-400 bg-blue-500/20 border-blue-500/50' },
+                    'IMPACT': { icon: 'fitness_center', label: 'Impacto', cls: 'text-yellow-400 bg-yellow-500/20 border-yellow-500/50' }
+                };
+                const wCls = activeTab === 'weapons' ? 'bg-yellow-500 text-black' : 'bg-[#2d2438] text-gray-400 hover:text-white';
+                const tCls = activeTab === 'traps' ? 'bg-purple-600 text-white' : 'bg-[#2d2438] text-gray-400 hover:text-white';
+                let htmlStr = <div class="col-span-2 flex gap-2 mb-2">
+                    <button onclick="window._craftTab='weapons'; gameAPI.renderCraftBook();" class="flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${wCls}">Armas (${weapons.length})</button>
+                    <button onclick="window._craftTab='traps'; gameAPI.renderCraftBook();" class="flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${tCls}">Armadilhas (${traps.length})</button>
+                </div><div class="col-span-2 grid grid-cols-1 gap-4">;
+                list.forEach(recipe => {
                     const reqDOM = recipe.req.map(id => {
                         const item = gameAPI.getItemData(id);
-                        const hasConfig = GameState.inventory.find(i => i.itemId === id && i.quantity > 0);
-                        const colorClass = hasConfig ? 'text-green-400' : 'text-red-400';
-                        const iconClass = hasConfig ? 'check_circle' : 'cancel';
-                        return `<div class="flex items-center gap-1 text-[10px] bg-black/30 p-1 rounded border border-gray-700">
-                                    <span class="material-symbols-outlined text-[12px] ${colorClass}">${iconClass}</span>
-                                    <span class="truncate text-gray-300">${item ? item.name : '???'}</span>
-                                </div>`;
+                        const has = !!GameState.inventory.find(i => i.itemId === id && i.quantity > 0);
+                        return <div class="flex items-center gap-1 text-[10px] ${has?'bg-green-900/30':'bg-red-900/20'} p-1 rounded border ${has?'border-green-700/40':'border-red-800/30'}"><span class="material-symbols-outlined text-[12px] ${has?'text-green-400':'text-red-400'}">${has?'check_circle':'cancel'}</span><span class="truncate ${has?'text-green-300':'text-gray-500'}">${item?item.name:'???'}</span></div>;
                     }).join('');
-
                     const isAfternoon = GameState.phase === 'AFTERNOON';
                     const canCraft = isAfternoon && recipe.req.every(id => GameState.inventory.find(i => i.itemId === id && i.quantity > 0));
-                    const btnClass = canCraft
-                        ? 'bg-purple-600 hover:bg-purple-500 text-white cursor-pointer active:scale-95 shadow-[0_0_15px_rgba(147,51,234,0.5)]'
-                        : !isAfternoon
-                            ? 'bg-gray-800 text-gray-600 cursor-not-allowed opacity-40 italic'
-                            : 'bg-gray-800 text-gray-500 cursor-not-allowed opacity-50';
-                    const btnLabel = !isAfternoon ? 'Só na Tarde' : 'CRAFT';
-
-                    const typeConfig = {
-                        'FIRE': { icon: 'local_fire_department', label: 'Fogo', cls: 'text-orange-400 bg-orange-500/20 border-orange-500/50' },
-                        'WATER': { icon: 'water_drop', label: 'Água', cls: 'text-blue-400 bg-blue-500/20 border-blue-500/50' },
-                        'IMPACT': { icon: 'fitness_center', label: 'Impacto', cls: 'text-yellow-400 bg-yellow-500/20 border-yellow-500/50' }
-                    };
-                    const tc = typeConfig[recipe.type] || typeConfig['IMPACT'];
-                    const trapBadge = recipe.isTrap
-                        ? `<span class="text-[9px] px-1.5 py-0.5 rounded border border-purple-500/50 bg-purple-500/20 text-purple-300 font-bold">ARMADILHA</span>`
-                        : `<span class="text-[9px] px-1.5 py-0.5 rounded border border-gray-600/50 bg-gray-600/20 text-gray-400 font-bold">ARMA</span>`;
-                    const cadBadge = !recipe.isTrap
-                        ? `<span class="text-[9px] px-1.5 py-0.5 rounded border border-gray-600/50 bg-gray-600/20 text-gray-400">&#9201; ${(recipe.cadence * 0.1).toFixed(1)}s</span>`
-                        : '';
-
-                    htmlStr += `
-                        <div class="bg-surface-darker rounded-xl border border-[#4a3b5c] p-4 flex flex-col gap-3 hover:border-purple-500 transition-colors">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-12 h-12 bg-${recipe.color}-500/20 rounded border border-${recipe.color}-500 flex items-center justify-center">
-                                        <span class="material-symbols-outlined text-2xl text-${recipe.color}-400">${recipe.icon}</span>
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-gray-200">${recipe.name}</h4>
-                                        <div class="flex flex-wrap gap-1.5 mt-1">
-                                            <span class="flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded border ${tc.cls} font-bold">
-                                                <span class="material-symbols-outlined text-[11px]">${tc.icon}</span>
-                                                ${tc.label}
-                                            </span>
-                                            ${trapBadge}
-                                            ${cadBadge}
-                                            <span class="text-red-400 flex items-center text-[10px] uppercase font-bold"><span class="material-symbols-outlined text-[11px] mr-0.5">swords</span>${recipe.damage}</span>
-                                            <span class="text-blue-400 flex items-center text-[10px] uppercase font-bold"><span class="material-symbols-outlined text-[11px] mr-0.5">radar</span>${recipe.range}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2 mt-2 pt-2 border-t border-dashed border-gray-700">
-                                ${reqDOM}
-                            </div>
-                            <button onclick="${canCraft ? `gameAPI.craftItem(${recipe.id})` : ''}" class="w-full mt-2 px-4 py-2 font-sketch rounded-lg transition-transform ${btnClass}">${btnLabel}</button>
-                        </div>
-                    `;
-
+                    const btnClass = canCraft ? 'bg-purple-600 hover:bg-purple-500 text-white cursor-pointer active:scale-95' : !isAfternoon ? 'bg-gray-800 text-gray-600 cursor-not-allowed opacity-40 italic' : 'bg-gray-800 text-gray-500 cursor-not-allowed opacity-50';
+                    const btnLabel = !isAfternoon ? 'So na Tarde' : 'CRAFT';
+                    const tc = TCfg[recipe.type] || TCfg['IMPACT'];
+                    const cadBadge = !recipe.isTrap ? <span class="text-[9px] px-1 py-0.5 rounded border border-gray-600/50 bg-gray-600/20 text-gray-400">&#9201; ${(recipe.cadence*0.1).toFixed(1)}s</span> : <span class="text-[9px] px-1 py-0.5 rounded border border-purple-500/50 bg-purple-500/20 text-purple-300">${recipe.uses===-1?'inf':''+recipe.uses} usos</span>;
+                    htmlStr += <div class="bg-surface-darker rounded-xl border border-[#4a3b5c] p-3 flex flex-col gap-2 hover:border-purple-500 transition-colors"><div class="flex items-center gap-3"><div class="w-11 h-11 bg-${recipe.color}-500/20 rounded-xl border border-${recipe.color}-500 flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-2xl text-${recipe.color}-400">${recipe.icon}</span></div><div class="flex-1 min-w-0"><h4 class="font-bold text-gray-200 text-sm truncate">${recipe.name}</h4><div class="flex flex-wrap gap-1 mt-0.5"><span class="flex items-center gap-0.5 text-[9px] px-1 py-0.5 rounded border ${tc.cls} font-bold"><span class="material-symbols-outlined text-[10px]">${tc.icon}</span>${tc.label}</span>${cadBadge}<span class="text-red-400 text-[9px] font-bold">&#9876; ${recipe.damage}</span><span class="text-blue-400 text-[9px] font-bold">&#9678; ${recipe.range}</span></div></div></div><div class="grid grid-cols-2 gap-1 pt-2 border-t border-dashed border-gray-700">${reqDOM}</div><button onclick="${canCraft ? gameAPI.craftItem(${recipe.id}) : ''}" class="w-full px-3 py-1.5 font-sketch rounded-lg text-sm transition-transform ${btnClass}">${btnLabel}</button></div>;
                 });
-
                 grid.innerHTML = htmlStr + '</div>';
             },
 
@@ -1140,7 +1088,9 @@
                     effect: cItem.effect || null,
                     effectValue: cItem.effectValue || 0,
                     effectDuration: cItem.effectDuration || 0,
-                    triggeredEnemies: [] // track which enemy IDs have been triggered
+                    triggeredEnemies: [],
+                    upgradeLevel: 0,
+                    recipeId: cItem.recipeId
                 });
 
                 // Remove from tray
@@ -1348,6 +1298,64 @@
                         `;
                     }
                 }
+            },
+
+            openUpgradePanel: (towerId) => {
+                const t = GameState.towers.find(t => t.id === towerId);
+                if (!t) return;
+                const panel = document.getElementById('upgrade-panel');
+                const defV = document.getElementById('upgrade-default');
+                if (!panel || !defV) return;
+                const upgrades = (typeof DB_UPGRADES !== 'undefined') ? (DB_UPGRADES[t.recipeId] || []) : [];
+                const colorBase = (t.color || 'gray').split('-')[0];
+                const typeLbl = { FIRE: 'Fogo', WATER: 'Agua', IMPACT: 'Impacto' };
+                const typeCls = { FIRE: 'text-orange-400', WATER: 'text-blue-400', IMPACT: 'text-yellow-400' };
+                let starsHTML = '';
+                for (let i = 1; i <= 3; i++) {
+                    const done = t.upgradeLevel >= i;
+                    starsHTML += <span class="w-5 h-5 rounded-full ${done?'bg-yellow-400 border-yellow-300 text-black':'bg-gray-700 border-gray-600 text-gray-500'} border flex items-center justify-center text-[9px] font-bold">${i}</span>;
+                }
+                let upgrHTML = <div class="shrink-0 p-3 border-b-2 border-[#4a3b5c] bg-surface-darker flex items-center gap-3"><button onclick="gameAPI.closeUpgradePanel()" class="text-gray-400 hover:text-white"><span class="material-symbols-outlined">arrow_back</span></button><h3 class="font-sketch text-primary text-base">Upgrade de Arma</h3></div><div class="shrink-0 p-3 flex items-center gap-4 bg-[#1a1625] border-b border-[#4a3b5c]"><div class="w-14 h-14 bg-${colorBase}-500/20 rounded-2xl border-2 border-${colorBase}-500 flex items-center justify-center"><span class="material-symbols-outlined text-3xl text-${colorBase}-400">${t.icon}</span></div><div><h4 class="font-bold text-white text-sm">${t.name}</h4><div class="flex gap-2 mt-0.5 text-[10px]"><span class="${typeCls[t.type]||'text-gray-400'}">${typeLbl[t.type]||t.type}</span><span class="text-red-400">Dmg ${t.damage}</span><span class="text-blue-400">Rng ${t.range}</span></div><div class="mt-1 flex gap-1">${starsHTML}</div></div></div><div class="flex-1 overflow-y-auto p-3 flex flex-col gap-3">;
+                if (upgrades.length === 0) upgrHTML += <p class="text-gray-500 text-sm text-center mt-8">Sem upgrades para esta arma.</p>;
+                upgrades.forEach(upg => {
+                    const done = t.upgradeLevel >= upg.lvl;
+                    const canDo = t.upgradeLevel === upg.lvl - 1;
+                    const canAfford = GameState.coins >= upg.cost;
+                    const avail = canDo && canAfford;
+                    const cardCls = done ? 'border-yellow-500/50 bg-yellow-500/10 opacity-75' : canDo ? 'border-[#4a3b5c] bg-surface-darker hover:border-purple-500' : 'border-gray-800 bg-[#1a1625] opacity-40';
+                    const bCls = done ? 'bg-yellow-600 text-black cursor-not-allowed' : avail ? 'bg-purple-600 hover:bg-purple-500 text-white cursor-pointer' : 'bg-gray-800 text-gray-600 cursor-not-allowed opacity-50';
+                    const bLabel = done ? 'APLICADO' : !canDo ? 'BLOQUEADO' : !canAfford ? Precisas de ${upg.cost} moedas : UPGRADE (${upg.cost} moedas);
+                    const fn = avail && !done ? gameAPI.applyUpgrade(${towerId},${upg.lvl}); gameAPI.openUpgradePanel(${towerId}); : '';
+                    upgrHTML += <div class="rounded-xl border p-3 ${cardCls} transition-colors"><div class="flex justify-between items-start mb-1"><div><span class="text-[9px] text-gray-500 uppercase">Nivel ${upg.lvl}</span><h5 class="font-bold text-gray-200 text-sm">${upg.name}</h5><p class="text-gray-400 text-[11px]">${upg.desc}</p></div><span class="material-symbols-outlined text-2xl ${done?'text-yellow-400':'text-gray-700'}">${done?'verified':'upgrade'}</span></div><button onclick="${fn}" class="w-full mt-2 px-3 py-1.5 font-sketch rounded-lg text-xs ${bCls}">${bLabel}</button></div>;
+                });
+                upgrHTML += '</div>';
+                panel.innerHTML = upgrHTML;
+                defV.classList.add('hidden');
+                panel.classList.remove('hidden');
+                panel.classList.add('flex');
+            },
+
+            closeUpgradePanel: () => {
+                const p = document.getElementById('upgrade-panel');
+                const d = document.getElementById('upgrade-default');
+                if (p) { p.classList.add('hidden'); p.classList.remove('flex'); }
+                if (d) d.classList.remove('hidden');
+            },
+
+            applyUpgrade: (towerId, lvl) => {
+                const t = GameState.towers.find(t => t.id === towerId);
+                if (!t) return;
+                const ups = (typeof DB_UPGRADES !== 'undefined') ? (DB_UPGRADES[t.recipeId] || []) : [];
+                const upg = ups.find(u => u.lvl === lvl);
+                if (!upg || t.upgradeLevel >= lvl) return;
+                if (GameState.coins < upg.cost) { showToast('Sem Moedas', 'Moedas insuficientes!', 'warning'); return; }
+                GameState.coins -= upg.cost;
+                if (upg.stat === 'damage') t.damage += upg.value;
+                if (upg.stat === 'range') t.range += upg.value;
+                if (upg.stat === 'cadence') t.cadence = Math.max(5, t.cadence + upg.value);
+                t.upgradeLevel = lvl;
+                gameAPI.updateHUD();
+                showToast('Upgrade!', upg.name + ' aplicado em ' + t.name + '!', 'success');
             },
 
             openBestiary: () => {
@@ -1563,7 +1571,7 @@
                     const trapTag = t.isTrap ? `<span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-purple-500 border border-purple-300 z-30 flex items-center justify-center"><span class="material-symbols-outlined text-[8px] text-white">warning</span></span>` : '';
 
                     el.innerHTML = `
-                        <div class="relative w-12 h-12 flex items-center justify-center transform transition-transform group-hover/tower:scale-110 cursor-pointer" onclick="this.querySelector('.range-indicator').classList.toggle('opacity-0'); this.querySelector('.range-indicator').classList.toggle('opacity-100');">
+                        <div class="relative w-12 h-12 flex items-center justify-center transform transition-transform group-hover/tower:scale-110 cursor-pointer" onclick="if(GameState.phase==='NIGHT'){gameAPI.openUpgradePanel(${t.id});}else{this.querySelector('.range-indicator').classList.toggle('opacity-0');this.querySelector('.range-indicator').classList.toggle('opacity-100');}">
                             <!-- Range indicator -->
                             <div class="range-indicator opacity-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-${colorBase}-500/50 bg-${colorBase}-500/10 pointer-events-none transition-opacity duration-300" style="width: ${rangeSize}; height: ${rangeSize};"></div>
 
