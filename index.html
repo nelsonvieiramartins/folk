@@ -630,7 +630,7 @@
             night: 1,
             phase: 'MORNING', // MORNING, AFTERNOON, NIGHT
             relics: 3,
-            coins: 100, // Unified currency replacing Tamps
+            coins: 30, // Moedas iniciais (revisado para equilíbrio)
             inventory: [], // Removed initial mock items
             craftedItems: [], // Items ready to be placed
             tradeSlots: { 1: null, 2: null },
@@ -829,8 +829,8 @@
                 else if (GameState.phase === 'NIGHT') {
                     GameState.phase = 'MORNING';
                     GameState.night += 1;
-                    GameState.coins += 20; // Recompensa de sobrevivência
-                    showToast('Sobreviveu', 'Você recebeu 20 moedas!', 'success');
+                    GameState.coins += 12; // Recompensa de sobrevivência (escalonada com nova economia)
+                    showToast('Sobreviveu', 'Você recebeu 12 moedas!', 'success');
                 }
 
                 gameAPI.updatePhaseUI();

@@ -4,44 +4,45 @@ const DB_ITEMS = [
     // GRÁTIS (Depósito)
     { id: 1, name: 'Fita adesiva', type: 'FREE', buy_coins: 0, sell_coins: 1, icon: 'texture', color: 'gray-300' },
     { id: 2, name: 'Elásticos', type: 'FREE', buy_coins: 0, sell_coins: 1, icon: 'all_out', color: 'gray-300' },
-    { id: 3, name: 'Madeirite', type: 'FREE', buy_coins: 0, sell_coins: 2, icon: 'table_restaurant', color: 'orange-300' },
+    { id: 3, name: 'Madeirite', type: 'FREE', buy_coins: 0, sell_coins: 1, icon: 'table_restaurant', color: 'orange-300' },
 
     // 1 MOEDA (Depósito)
-    { id: 4, name: 'Fios', type: 'ONE_COIN', buy_coins: 1, sell_coins: 2, icon: 'cable', color: 'blue-400' },
-    { id: 5, name: 'Tubo de PVC', type: 'ONE_COIN', buy_coins: 1, sell_coins: 2, icon: 'water_damage', color: 'gray-100' },
+    { id: 4, name: 'Fios', type: 'ONE_COIN', buy_coins: 1, sell_coins: 1, icon: 'cable', color: 'blue-400' },
+    { id: 5, name: 'Tubo de PVC', type: 'ONE_COIN', buy_coins: 1, sell_coins: 1, icon: 'water_damage', color: 'gray-100' },
     { id: 6, name: 'Barbante', type: 'ONE_COIN', buy_coins: 1, sell_coins: 1, icon: 'gesture', color: 'yellow-200' },
 
-    // SUPORTE (Seu Zé)
-    { id: 7, name: 'Base Ventilador', type: 'SUPPORT', buy_coins: 10, sell_coins: 5, icon: 'mode_fan', color: 'gray-400' },
-    { id: 8, name: 'Tripé de câmera', type: 'SUPPORT', buy_coins: 15, sell_coins: 7, icon: 'photo_camera', color: 'gray-500' },
-    { id: 9, name: 'Carrinho de Mão', type: 'SUPPORT', buy_coins: 20, sell_coins: 10, icon: 'shopping_cart', color: 'green-500' },
-    { id: 10, name: 'Caixa de Papelão', type: 'SUPPORT', buy_coins: 5, sell_coins: 2, icon: 'inventory_2', color: 'orange-200' },
-    { id: 11, name: 'Estacas Madeira', type: 'SUPPORT', buy_coins: 10, sell_coins: 5, icon: 'fence', color: 'orange-400' },
-    { id: 12, name: 'Balde', type: 'SUPPORT', buy_coins: 8, sell_coins: 4, icon: 'delete', color: 'blue-300' },
-    { id: 13, name: 'Chapa de Metal', type: 'SUPPORT', buy_coins: 15, sell_coins: 7, icon: 'grid_4x4', color: 'gray-400' },
-    { id: 14, name: 'Tijolo', type: 'SUPPORT', buy_coins: 8, sell_coins: 4, icon: 'view_comfy', color: 'red-400' },
-    { id: 15, name: 'Caixote Madeira', type: 'SUPPORT', buy_coins: 12, sell_coins: 6, icon: 'widgets', color: 'orange-300' },
+    // SUPORTE (Seu Zé) — era 5-20c, agora 3-12c
+    { id: 7, name: 'Base Ventilador', type: 'SUPPORT', buy_coins: 6, sell_coins: 3, icon: 'mode_fan', color: 'gray-400' },
+    { id: 8, name: 'Tripé de câmera', type: 'SUPPORT', buy_coins: 9, sell_coins: 4, icon: 'photo_camera', color: 'gray-500' },
+    { id: 9, name: 'Carrinho de Mão', type: 'SUPPORT', buy_coins: 12, sell_coins: 6, icon: 'shopping_cart', color: 'green-500' },
+    { id: 10, name: 'Caixa de Papelão', type: 'SUPPORT', buy_coins: 3, sell_coins: 1, icon: 'inventory_2', color: 'orange-200' },
+    { id: 11, name: 'Estacas Madeira', type: 'SUPPORT', buy_coins: 6, sell_coins: 3, icon: 'fence', color: 'orange-400' },
+    { id: 12, name: 'Balde', type: 'SUPPORT', buy_coins: 5, sell_coins: 2, icon: 'delete', color: 'blue-300' },
+    { id: 13, name: 'Chapa de Metal', type: 'SUPPORT', buy_coins: 9, sell_coins: 4, icon: 'grid_4x4', color: 'gray-400' },
+    { id: 14, name: 'Tijolo', type: 'SUPPORT', buy_coins: 5, sell_coins: 2, icon: 'view_comfy', color: 'red-400' },
+    { id: 15, name: 'Caixote Madeira', type: 'SUPPORT', buy_coins: 7, sell_coins: 3, icon: 'widgets', color: 'orange-300' },
 
-    // ESSENCIAL (Seu Zé)
-    { id: 16, name: 'Pistola Nerf', type: 'ESSENTIAL', buy_coins: 16, sell_coins: 8, icon: 'water_drop', color: 'orange-500' },
-    { id: 17, name: 'Nerf Vulcan', type: 'ESSENTIAL', buy_coins: 20, sell_coins: 10, icon: 'construction', color: 'yellow-500' },
-    { id: 18, name: 'Super Soaker', type: 'ESSENTIAL', buy_coins: 18, sell_coins: 9, icon: 'opacity', color: 'blue-500' },
-    { id: 19, name: 'Soprador de Folhas', type: 'ESSENTIAL', buy_coins: 19, sell_coins: 9, icon: 'air', color: 'gray-300' },
-    { id: 20, name: 'Ratoeira', type: 'ESSENTIAL', buy_coins: 15, sell_coins: 7, icon: 'pest_control', color: 'gray-600' },
-    { id: 21, name: 'Pá de Jardim', type: 'ESSENTIAL', buy_coins: 20, sell_coins: 10, icon: 'hardware', color: 'gray-400' },
-    { id: 22, name: 'Pote de Vidro', type: 'ESSENTIAL', buy_coins: 10, sell_coins: 5, icon: 'blender', color: 'blue-200' },
-    { id: 23, name: 'Espanador de Pó', type: 'ESSENTIAL', buy_coins: 15, sell_coins: 7, icon: 'cleaning_services', color: 'yellow-100' },
-    { id: 24, name: 'Mangueira Furada', type: 'ESSENTIAL', buy_coins: 15, sell_coins: 7, icon: 'waves', color: 'green-400' },
-    { id: 25, name: 'Pulverizador', type: 'ESSENTIAL', buy_coins: 16, sell_coins: 8, icon: 'sanitizer', color: 'purple-400' },
-    { id: 26, name: 'Roupas Velhas', type: 'ESSENTIAL', buy_coins: 10, sell_coins: 5, icon: 'checkroom', color: 'red-300' },
-    { id: 27, name: 'Bambolê', type: 'ESSENTIAL', buy_coins: 15, sell_coins: 7, icon: 'data_usage', color: 'pink-400' },
-    { id: 28, name: 'Tapete Velho', type: 'ESSENTIAL', buy_coins: 20, sell_coins: 10, icon: 'aspect_ratio', color: 'red-500' },
-    { id: 29, name: 'Aspersor Oscilante', type: 'ESSENTIAL', buy_coins: 17, sell_coins: 8, icon: 'shower', color: 'blue-400' },
-    { id: 30, name: 'Pneu de Carro', type: 'ESSENTIAL', buy_coins: 18, sell_coins: 9, icon: 'radio_button_unchecked', color: 'gray-600' },
-    { id: 31, name: 'Motor Elétrico', type: 'ESSENTIAL', buy_coins: 20, sell_coins: 10, icon: 'ev_station', color: 'yellow-400' },
-    { id: 32, name: 'Roda de Bicicleta', type: 'ESSENTIAL', buy_coins: 15, sell_coins: 7, icon: 'timelapse', color: 'gray-300' },
-    { id: 33, name: 'Bateria de Carro', type: 'ESSENTIAL', buy_coins: 19, sell_coins: 9, icon: 'battery_charging_full', color: 'green-500' }
+    // ESSENCIAL (Seu Zé) — era 10-20c, agora 6-12c
+    { id: 16, name: 'Pistola Nerf', type: 'ESSENTIAL', buy_coins: 10, sell_coins: 5, icon: 'water_drop', color: 'orange-500' },
+    { id: 17, name: 'Nerf Vulcan', type: 'ESSENTIAL', buy_coins: 12, sell_coins: 6, icon: 'construction', color: 'yellow-500' },
+    { id: 18, name: 'Super Soaker', type: 'ESSENTIAL', buy_coins: 11, sell_coins: 5, icon: 'opacity', color: 'blue-500' },
+    { id: 19, name: 'Soprador de Folhas', type: 'ESSENTIAL', buy_coins: 12, sell_coins: 6, icon: 'air', color: 'gray-300' },
+    { id: 20, name: 'Ratoeira', type: 'ESSENTIAL', buy_coins: 9, sell_coins: 4, icon: 'pest_control', color: 'gray-600' },
+    { id: 21, name: 'Pá de Jardim', type: 'ESSENTIAL', buy_coins: 12, sell_coins: 6, icon: 'hardware', color: 'gray-400' },
+    { id: 22, name: 'Pote de Vidro', type: 'ESSENTIAL', buy_coins: 6, sell_coins: 3, icon: 'blender', color: 'blue-200' },
+    { id: 23, name: 'Espanador de Pó', type: 'ESSENTIAL', buy_coins: 9, sell_coins: 4, icon: 'cleaning_services', color: 'yellow-100' },
+    { id: 24, name: 'Mangueira Furada', type: 'ESSENTIAL', buy_coins: 9, sell_coins: 4, icon: 'waves', color: 'green-400' },
+    { id: 25, name: 'Pulverizador', type: 'ESSENTIAL', buy_coins: 10, sell_coins: 5, icon: 'sanitizer', color: 'purple-400' },
+    { id: 26, name: 'Roupas Velhas', type: 'ESSENTIAL', buy_coins: 6, sell_coins: 3, icon: 'checkroom', color: 'red-300' },
+    { id: 27, name: 'Bambolê', type: 'ESSENTIAL', buy_coins: 9, sell_coins: 4, icon: 'data_usage', color: 'pink-400' },
+    { id: 28, name: 'Tapete Velho', type: 'ESSENTIAL', buy_coins: 12, sell_coins: 6, icon: 'aspect_ratio', color: 'red-500' },
+    { id: 29, name: 'Aspersor Oscilante', type: 'ESSENTIAL', buy_coins: 10, sell_coins: 5, icon: 'shower', color: 'blue-400' },
+    { id: 30, name: 'Pneu de Carro', type: 'ESSENTIAL', buy_coins: 11, sell_coins: 5, icon: 'radio_button_unchecked', color: 'gray-600' },
+    { id: 31, name: 'Motor Elétrico', type: 'ESSENTIAL', buy_coins: 12, sell_coins: 6, icon: 'ev_station', color: 'yellow-400' },
+    { id: 32, name: 'Roda de Bicicleta', type: 'ESSENTIAL', buy_coins: 9, sell_coins: 4, icon: 'timelapse', color: 'gray-300' },
+    { id: 33, name: 'Bateria de Carro', type: 'ESSENTIAL', buy_coins: 12, sell_coins: 6, icon: 'battery_charging_full', color: 'green-500' }
 ];
+
 
 const DB_RECIPES = [
     { id: 101, name: 'Sentinela Nerf', req: [16, 7, 1, 4], damage: 2, range: 40, type: 'IMPACT', icon: 'mode_fan', color: 'orange' },
