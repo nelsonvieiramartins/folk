@@ -290,12 +290,15 @@
             <aside id="store-panel"
                 class="w-[400px] shrink-0 bg-[#15121e] flex flex-col relative overflow-hidden z-10 border-l-4 border-dashed border-[#4a3b5c]">
 
-                <!-- Placeholder for Night -->
-                <div id="store-night"
-                    class="absolute inset-0 flex flex-col items-center justify-center p-8 opacity-50 z-0 hidden">
-                    <span class="material-symbols-outlined text-6xl text-gray-700 mb-4">nights_stay</span>
-                    <p class="text-gray-500 font-sketch text-lg text-center">Fase da Noite<br><span
-                            class="text-xs font-sans">Loja fechada. Sobreviva!</span></p>
+                <!-- Night / Painel de Upgrade -->
+                <div id="store-night" class="absolute inset-0 flex flex-col z-0 hidden overflow-hidden">
+                    <div id="upgrade-default" class="flex-1 flex flex-col items-center justify-center p-8 opacity-50">
+                        <span class="material-symbols-outlined text-6xl text-gray-700 mb-4">nights_stay</span>
+                        <p class="text-gray-500 font-sketch text-lg text-center">Fase da Noite<br><span
+                                class="text-xs font-sans">Clique numa arma instalada para fazer upgrade!</span></p>
+                    </div>
+                    <div id="upgrade-panel" class="hidden flex-col overflow-y-auto flex-1">
+                    </div>
                 </div>
 
                 <!-- Morning Store (Depósito) -->
@@ -923,9 +926,20 @@
                 const grid = document.getElementById('craft-book-grid');
                 if (!grid) return;
 
-                let htmlStr = '<div class="grid grid-cols-1 md:grid-cols-2 gap-4">';
+                // Abas Armas / Armadilhas — ordenadas por dano decrescente
+                const activeTab = window._craftTab || 'weapons';
+                const weapons = DB_RECIPES.filter(r => !r.isTrap).sort((a, b) => b.damage - a.damage);
+                const traps = DB_RECIPES.filter(r => r.isTrap).sort((a, b) => b.damage - a.damage);
+                const list = activeTab === 'weapons' ? weapons : traps;
+                const wCls = activeTab === 'weapons' ? 'bg-yellow-500 text-black' : 'bg-[#2d2438] text-gray-400 hover:text-white';
+                const tCls = activeTab === 'traps' ? 'bg-purple-600 text-white' : 'bg-[#2d2438] text-gray-400 hover:text-white';
 
-                DB_RECIPES.forEach(recipe => {
+                let htmlStr = `<div class="col-span-2 flex gap-2 mb-2">
+                    <button onclick="window._craftTab='weapons'; gameAPI.renderCraftBook();" class="flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${wCls}">⚔️ Armas (${weapons.length})</button>
+                    <button onclick="window._craftTab='traps'; gameAPI.renderCraftBook();" class="flex-1 py-2 rounded-lg font-bold text-sm transition-colors ${tCls}">🪤 Armadilhas (${traps.length})</button>
+                </div><div class="col-span-1 grid grid-cols-1 gap-4">`;
+
+                list.forEach(recipe => {
                     const reqDOM = recipe.req.map(id => {
                         const item = gameAPI.getItemData(id);
                         const hasConfig = GameState.inventory.find(i => i.itemId === id && i.quantity > 0);
@@ -990,7 +1004,7 @@
 
                 });
 
-                grid.innerHTML = htmlStr + '</div>';
+                grid.innerHTML = htmlStr + '</div></div>';
             },
 
             craftItem: (recipeId) => {
@@ -1140,7 +1154,9 @@
                     effect: cItem.effect || null,
                     effectValue: cItem.effectValue || 0,
                     effectDuration: cItem.effectDuration || 0,
-                    triggeredEnemies: [] // track which enemy IDs have been triggered
+                    triggeredEnemies: [],
+                    upgradeLevel: 0,
+                    recipeId: cItem.recipeId
                 });
 
                 // Remove from tray
@@ -1348,6 +1364,100 @@
                         `;
                     }
                 }
+            },
+
+            openUpgradePanel: (towerId) => {
+                const t = GameState.towers.find(t => t.id === towerId);
+                if (!t) return;
+                const panel = document.getElementById('upgrade-panel');
+                const defV = document.getElementById('upgrade-default');
+                if (!panel || !defV) return;
+                const upgrades = (typeof DB_UPGRADES !== 'undefined') ? (DB_UPGRADES[t.recipeId] || []) : [];
+                const colorBase = (t.color || 'gray').split('-')[0];
+                const typeLbl = { FIRE: 'Fogo', WATER: 'Água', IMPACT: 'Impacto' };
+                const typeCls = { FIRE: 'text-orange-400', WATER: 'text-blue-400', IMPACT: 'text-yellow-400' };
+                let starsHTML = '';
+                for (let i = 1; i <= 3; i++) {
+                    const done = t.upgradeLevel >= i;
+                    starsHTML += `<span class="w-5 h-5 rounded-full ${done ? 'bg-yellow-400 border-yellow-300 text-black' : 'bg-gray-700 border-gray-600 text-gray-500'} border flex items-center justify-center text-[9px] font-bold">${i}</span>`;
+                }
+                let html = `
+                    <div class="shrink-0 p-3 border-b-2 border-[#4a3b5c] bg-surface-darker flex items-center gap-3">
+                        <button onclick="gameAPI.closeUpgradePanel()" class="text-gray-400 hover:text-white transition-colors"><span class="material-symbols-outlined">arrow_back</span></button>
+                        <h3 class="font-sketch text-primary text-base">Upgrade de Arma</h3>
+                    </div>
+                    <div class="shrink-0 p-3 flex items-center gap-4 bg-[#1a1625] border-b border-[#4a3b5c]">
+                        <div class="w-14 h-14 bg-${colorBase}-500/20 rounded-2xl border-2 border-${colorBase}-500 flex items-center justify-center shadow-lg">
+                            <span class="material-symbols-outlined text-3xl text-${colorBase}-400">${t.icon}</span>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-white text-sm">${t.name}</h4>
+                            <div class="flex gap-2 mt-0.5 text-[10px]">
+                                <span class="${typeCls[t.type] || 'text-gray-400'}">${typeLbl[t.type] || t.type}</span>
+                                <span class="text-red-400">Dano: ${t.damage}</span>
+                                <span class="text-blue-400">Alcance: ${t.range}</span>
+                            </div>
+                            <div class="mt-1 flex gap-1">${starsHTML}</div>
+                        </div>
+                    </div>
+                    <div class="flex-1 overflow-y-auto p-3 flex flex-col gap-3">`;
+                if (upgrades.length === 0) {
+                    html += `<p class="text-gray-500 text-sm text-center mt-8">Sem upgrades para esta arma.</p>`;
+                }
+                upgrades.forEach(upg => {
+                    const done = t.upgradeLevel >= upg.lvl;
+                    const canDo = t.upgradeLevel === upg.lvl - 1;
+                    const canAfford = GameState.coins >= upg.cost;
+                    const avail = canDo && canAfford && !done;
+                    const cardCls = done ? 'border-yellow-500/50 bg-yellow-500/10 opacity-75'
+                        : canDo ? 'border-[#4a3b5c] bg-surface-darker hover:border-purple-500'
+                            : 'border-gray-800 bg-[#1a1625] opacity-40';
+                    const bCls = done ? 'bg-yellow-600 text-black cursor-not-allowed'
+                        : avail ? 'bg-purple-600 hover:bg-purple-500 text-white cursor-pointer active:scale-95'
+                            : 'bg-gray-800 text-gray-600 cursor-not-allowed opacity-50';
+                    const bLabel = done ? 'APLICADO' : !canDo ? 'BLOQUEADO' : !canAfford ? `${upg.cost} moedas` : `UPGRADE (${upg.cost} moedas)`;
+                    const fn = avail ? `gameAPI.applyUpgrade(${towerId},${upg.lvl}); gameAPI.openUpgradePanel(${towerId});` : '';
+                    html += `
+                        <div class="rounded-xl border p-3 ${cardCls} transition-colors">
+                            <div class="flex justify-between items-start mb-1">
+                                <div>
+                                    <span class="text-[9px] text-gray-500 uppercase font-bold">Nível ${upg.lvl}</span>
+                                    <h5 class="font-bold text-gray-200 text-sm">${upg.name}</h5>
+                                    <p class="text-gray-400 text-[11px] mt-0.5">${upg.desc}</p>
+                                </div>
+                                <span class="material-symbols-outlined text-2xl ${done ? 'text-yellow-400' : 'text-gray-700'}">${done ? 'verified' : 'upgrade'}</span>
+                            </div>
+                            <button onclick="${fn}" class="w-full mt-2 px-3 py-1.5 font-sketch rounded-lg text-xs ${bCls}">${bLabel}</button>
+                        </div>`;
+                });
+                html += `</div>`;
+                panel.innerHTML = html;
+                defV.classList.add('hidden');
+                panel.classList.remove('hidden');
+                panel.classList.add('flex');
+            },
+
+            closeUpgradePanel: () => {
+                const p = document.getElementById('upgrade-panel');
+                const d = document.getElementById('upgrade-default');
+                if (p) { p.classList.add('hidden'); p.classList.remove('flex'); }
+                if (d) d.classList.remove('hidden');
+            },
+
+            applyUpgrade: (towerId, lvl) => {
+                const t = GameState.towers.find(t => t.id === towerId);
+                if (!t) return;
+                const ups = (typeof DB_UPGRADES !== 'undefined') ? (DB_UPGRADES[t.recipeId] || []) : [];
+                const upg = ups.find(u => u.lvl === lvl);
+                if (!upg || t.upgradeLevel >= lvl) return;
+                if (GameState.coins < upg.cost) { showToast('Sem Moedas', 'Moedas insuficientes!', 'warning'); return; }
+                GameState.coins -= upg.cost;
+                if (upg.stat === 'damage') t.damage += upg.value;
+                if (upg.stat === 'range') t.range += upg.value;
+                if (upg.stat === 'cadence') t.cadence = Math.max(5, t.cadence + upg.value);
+                t.upgradeLevel = lvl;
+                gameAPI.updateHUD();
+                showToast('Upgrade!', `${upg.name} aplicado em ${t.name}!`, 'success');
             },
 
             openBestiary: () => {
@@ -1563,7 +1673,7 @@
                     const trapTag = t.isTrap ? `<span class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-purple-500 border border-purple-300 z-30 flex items-center justify-center"><span class="material-symbols-outlined text-[8px] text-white">warning</span></span>` : '';
 
                     el.innerHTML = `
-                        <div class="relative w-12 h-12 flex items-center justify-center transform transition-transform group-hover/tower:scale-110 cursor-pointer" onclick="this.querySelector('.range-indicator').classList.toggle('opacity-0'); this.querySelector('.range-indicator').classList.toggle('opacity-100');">
+                        <div class="relative w-12 h-12 flex items-center justify-center transform transition-transform group-hover/tower:scale-110 cursor-pointer" onclick="if(GameState.phase==='NIGHT'){gameAPI.openUpgradePanel(${t.id});}else{this.querySelector('.range-indicator').classList.toggle('opacity-0');this.querySelector('.range-indicator').classList.toggle('opacity-100');}">
                             <!-- Range indicator -->
                             <div class="range-indicator opacity-0 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-${colorBase}-500/50 bg-${colorBase}-500/10 pointer-events-none transition-opacity duration-300" style="width: ${rangeSize}; height: ${rangeSize};"></div>
 
